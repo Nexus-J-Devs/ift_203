@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consent — Scholarship Form Study</title>
+  <meta name="description" content="Participant consent page for the IFT 203 scholarship form research study." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <div class="card">
+
+      <!-- Header -->
+      <div class="page-header">
+        <span class="badge" id="formBadge">Research Study</span>
+        <h1 style="font-size:1.6rem;">Before You Start</h1>
+        <p>Please read the short statement below and check the box to continue.</p>
+      </div>
+
+      <!-- Consent statement -->
+      <div class="alert alert--info" style="margin-bottom:1.5rem;">
+        <span class="alert-icon">ℹ️</span>
+        <div class="alert-content">
+          <h4>Participant Information</h4>
+          <p>
+            This is an academic research exercise for IFT 203. You have chosen to try a form version and we will record:
+          </p>
+          <ul style="margin: 0.5rem 0 0 1rem; line-height:1.8;">
+            <li>Which form you used</li>
+            <li>How long you took to complete it</li>
+            <li>Whether you finished</li>
+            <li>Your answers to the 4-question survey</li>
+          </ul>
+          <p style="margin-top:0.75rem;">
+            <strong>No personal details you type into the form fields are collected or sent anywhere.</strong>
+            Only the anonymous results listed above are shared with the researcher.
+            Your participation is voluntary and you may close the page at any time.
+          </p>
+        </div>
+      </div>
+
+      <!-- Consent checkbox -->
+      <label class="consent-block" id="consentLabel">
+        <input type="checkbox" id="consentCheck" />
+        <p>
+          I understand this is a research exercise. I agree to participate.
+          I will <strong>not enter real personal information</strong> in the form.
+          I understand that only anonymous results (form type, time taken, and survey scores)
+          are sent to the researcher — nothing I type into the form fields is collected.
+        </p>
+      </label>
+
+      <!-- Error shown if they click Continue without ticking -->
+      <p class="field-error" id="consentError" style="margin-bottom:1rem;">
+        Please read and check the box before continuing.
+      </p>
+
+      <!-- Buttons -->
+      <div class="btn-group">
+        <a href="index.html" class="btn btn-secondary">← Back</a>
+        <button class="btn btn-primary" id="continueBtn" style="flex:1;">
+          I Agree — Start the Form →
+        </button>
+      </div>
+
+    </div><!-- /card -->
+  </div><!-- /page-wrapper -->
+
+  <script src="script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════
+    //  CONSENT PAGE LOGIC
+    // ══════════════════════════════════════════════
+
+    // Read which form was chosen on the welcome page
+    const pendingForm = sessionStorage.getItem('pendingForm'); // 'a' or 'b'
+
+    // If someone navigates here directly without choosing, send them back
+    if (!pendingForm) {
+      window.location.href = 'index.html';
+    }
+
+    // Update the badge to show which form is about to start
+    const badge = document.getElementById('formBadge');
+    if (pendingForm === 'a') {
+      badge.textContent = '🪜 Progressive Form';
+      badge.style.background = '#dbeafe';
+      badge.style.color = '#1d4ed8';
+    } else {
+      badge.textContent = '📋 Conventional Form';
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#15803d';
+    }
+
+    // Visually accent the consent block when checked
+    const consentCheck = document.getElementById('consentCheck');
+    const consentLabel = document.getElementById('consentLabel');
+    const consentError = document.getElementById('consentError');
+
+    consentCheck.addEventListener('change', () => {
+      consentLabel.style.borderColor = consentCheck.checked
+        ? 'var(--clr-primary)'
+        : 'var(--clr-neutral-300)';
+      consentError.classList.remove('visible');
+    });
+
+    document.getElementById('continueBtn').addEventListener('click', () => {
+      // Guard: must have ticked the consent box
+      if (!consentCheck.checked) {
+        consentError.classList.add('visible');
+        consentCheck.focus();
+        return;
+      }
+
+      // Mark consent given in sessionStorage (forms will check this)
+      sessionStorage.setItem('consentGiven', 'yes');
+
+      // Create the participant session with the chosen form type
+      // 'progressive' = Form A, 'conventional' = Form B
+      const formType = pendingForm === 'a' ? 'progressive' : 'conventional';
+      createSession(formType); // defined in script.js
+
+      // Clear pending choice and navigate to the chosen form
+      sessionStorage.removeItem('pendingForm');
+      window.location.href = pendingForm === 'a' ? 'form-a.html' : 'form-b.html';
+    });
+  </script>
+
+</body>
+</html>

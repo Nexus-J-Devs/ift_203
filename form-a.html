@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scholarship Application — Progressive Form</title>
+  <meta name="description" content="Progressive disclosure scholarship application form for a research study." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- Research notice -->
+    <div class="research-notice">
+      <span class="notice-icon">⚠️</span>
+      <span><strong>This is a research test.</strong> Do not enter real personal details.</span>
+    </div>
+
+    <div class="text-center">
+      <span class="form-tag form-tag--a">Progressive Form — Step by Step</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN CARD — wraps all steps
+    ══════════════════════════════════════════════ -->
+    <div class="card">
+
+      <!-- Progress bar (shown during steps) -->
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-label">
+          <span id="progressLabel">Step 1 of 3</span>
+          <span id="progressPct">33%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill" style="width:33%;"></div>
+        </div>
+        <div class="step-indicators">
+          <div class="step-dot active" id="dot1"></div>
+          <div class="step-dot"        id="dot2"></div>
+          <div class="step-dot"        id="dot3"></div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────────────────────
+           STEP 1: Basic info
+      ───────────────────────────────────────────── -->
+      <div id="step1">
+        <h2 class="section-title">Basic Information</h2>
+
+        <!-- Full Name -->
+        <div class="form-group" id="grp-name">
+          <label for="fa-name">Full Name <span class="required">*</span></label>
+          <input
+            type="text"
+            id="fa-name"
+            class="form-control"
+            placeholder="e.g. Ada Okafor"
+            autocomplete="off"
+          />
+          <span class="field-error" id="err-name"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="fa-email">Email Address <span class="required">*</span></label>
+          <input
+            type="email"
+            id="fa-email"
+            class="form-control"
+            placeholder="you@example.com"
+            autocomplete="off"
+          />
+          <span class="field-error" id="err-email"></span>
+        </div>
+
+        <!-- University & Course -->
+        <div class="form-group">
+          <label for="fa-university">University and Course <span class="required">*</span></label>
+          <input
+            type="text"
+            id="fa-university"
+            class="form-control"
+            placeholder="e.g. University of Lagos — Computer Science"
+            autocomplete="off"
+          />
+          <span class="field-error" id="err-university"></span>
+        </div>
+
+        <!-- Level -->
+        <div class="form-group">
+          <label for="fa-level">Level <span class="required">*</span></label>
+          <select id="fa-level" class="form-control">
+            <option value="">Select your level</option>
+            <option value="100">100 Level</option>
+            <option value="200">200 Level</option>
+            <option value="300">300 Level</option>
+            <option value="400">400 Level</option>
+            <option value="500">500 Level</option>
+          </select>
+          <span class="field-error" id="err-level"></span>
+        </div>
+
+        <!-- CGPA -->
+        <div class="form-group">
+          <label for="fa-cgpa">CGPA <span class="required">*</span> <span class="hint">(0.00 – 5.00)</span></label>
+          <input
+            type="number"
+            id="fa-cgpa"
+            class="form-control"
+            placeholder="e.g. 3.75"
+            min="0" max="5" step="0.01"
+            autocomplete="off"
+          />
+          <span class="field-error" id="err-cgpa"></span>
+        </div>
+
+        <!-- Scholarship Type -->
+        <div class="form-group" id="grp-schType">
+          <label>Scholarship Type <span class="required">*</span></label>
+          <div class="radio-group radio-group--inline" id="fa-schType">
+            <label class="radio-option">
+              <input type="radio" name="fa-scholarshipType" value="merit" />
+              🏆 Merit-based
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="fa-scholarshipType" value="need" />
+              🤝 Need-based
+            </label>
+          </div>
+          <span class="field-error" id="err-schType"></span>
+        </div>
+
+        <div class="btn-group" style="justify-content:flex-end;">
+          <button class="btn btn-primary" id="step1Next">Next →</button>
+        </div>
+      </div><!-- /step1 -->
+
+      <!-- ─────────────────────────────────────────
+           STEP 2: Conditional fields
+      ───────────────────────────────────────────── -->
+      <div id="step2" class="hidden">
+
+        <!-- Not Eligible State -->
+        <div id="ineligibleMsg" class="ineligible-box hidden">
+          <div class="ineligible-icon">😔</div>
+          <h2>Unfortunately, You Are Not Eligible</h2>
+          <p>
+            Our scholarship requires a minimum CGPA of <strong>3.0</strong>. Your recorded CGPA is below this threshold.<br><br>
+            We encourage you to continue working hard. You may re-apply once your CGPA meets the minimum requirement.
+          </p>
+          <a href="index.html" class="btn btn-secondary">← Return to Start</a>
+        </div>
+
+        <!-- Need-based extra fields -->
+        <div id="needBasedFields" class="hidden">
+          <h2 class="section-title">Financial Information</h2>
+
+          <div class="alert alert--info">
+            <span class="alert-icon">ℹ️</span>
+            <div class="alert-content">
+              <h4>Need-based scholarship selected</h4>
+              <p>Please provide the following financial details to support your application.</p>
+            </div>
+          </div>
+
+          <!-- Household Income Range -->
+          <div class="form-group">
+            <label for="fa-income">Household Income Range <span class="required">*</span></label>
+            <select id="fa-income" class="form-control">
+              <option value="">Select income range</option>
+              <option value="below-100k">Below ₦100,000 / month</option>
+              <option value="100k-300k">₦100,000 – ₦300,000 / month</option>
+              <option value="300k-500k">₦300,000 – ₦500,000 / month</option>
+              <option value="above-500k">Above ₦500,000 / month</option>
+            </select>
+            <span class="field-error" id="err-income"></span>
+          </div>
+
+          <!-- Parent/Guardian Occupation -->
+          <div class="form-group">
+            <label for="fa-occupation">Parent / Guardian Occupation <span class="required">*</span></label>
+            <input
+              type="text"
+              id="fa-occupation"
+              class="form-control"
+              placeholder="e.g. Farmer, Civil Servant, Self-employed"
+              autocomplete="off"
+            />
+            <span class="field-error" id="err-occupation"></span>
+          </div>
+
+          <div class="btn-group btn-group--between">
+            <button class="btn btn-secondary" id="step2BackNeed">← Back</button>
+            <button class="btn btn-primary"   id="step2NextNeed">Next →</button>
+          </div>
+        </div><!-- /needBasedFields -->
+
+        <!-- Merit skip (CGPA >= 3.0, Merit-based): just show a back button and auto-advance -->
+        <div id="meritSkipFields" class="hidden">
+          <div class="alert alert--success">
+            <span class="alert-icon">✅</span>
+            <div class="alert-content">
+              <h4>Great — you qualify for Merit-based consideration!</h4>
+              <p>No financial details are needed for this scholarship type. Continue to the next step.</p>
+            </div>
+          </div>
+          <div class="btn-group btn-group--between">
+            <button class="btn btn-secondary" id="step2BackMerit">← Back</button>
+            <button class="btn btn-primary"   id="step2NextMerit">Next →</button>
+          </div>
+        </div>
+
+      </div><!-- /step2 -->
+
+      <!-- ─────────────────────────────────────────
+           STEP 3: Final details (eligible only)
+      ───────────────────────────────────────────── -->
+      <div id="step3" class="hidden">
+        <h2 class="section-title">Final Details</h2>
+
+        <!-- Phone Number -->
+        <div class="form-group">
+          <label for="fa-phone">Phone Number <span class="required">*</span></label>
+          <input
+            type="tel"
+            id="fa-phone"
+            class="form-control"
+            placeholder="e.g. +234 801 234 5678"
+            autocomplete="off"
+          />
+          <span class="field-error" id="err-phone"></span>
+        </div>
+
+        <!-- Reason for Applying -->
+        <div class="form-group">
+          <label for="fa-reason">Reason for Applying <span class="required">*</span> <span class="hint">max 150 words</span></label>
+          <textarea
+            id="fa-reason"
+            class="form-control"
+            placeholder="Briefly explain why you are applying for this scholarship..."
+            rows="5"
+          ></textarea>
+          <div class="word-count" id="fa-reasonCount">0 / 150 words</div>
+          <span class="field-error" id="err-reason"></span>
+        </div>
+
+        <!-- Referee details (CGPA >= 3.0 means they're eligible, so always shown in step 3) -->
+        <div id="refereeSection">
+          <h2 class="section-title mt-4">Referee Details</h2>
+          <div class="alert alert--info" style="margin-bottom:1.25rem;">
+            <span class="alert-icon">👤</span>
+            <div class="alert-content">
+              <p>Because your CGPA meets the eligibility threshold, please provide a referee's contact details.</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fa-refName">Referee Full Name <span class="required">*</span></label>
+            <input
+              type="text"
+              id="fa-refName"
+              class="form-control"
+              placeholder="e.g. Prof. James Adeyemi"
+              autocomplete="off"
+            />
+            <span class="field-error" id="err-refName"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="fa-refEmail">Referee Email Address <span class="required">*</span></label>
+            <input
+              type="email"
+              id="fa-refEmail"
+              class="form-control"
+              placeholder="referee@university.edu"
+              autocomplete="off"
+            />
+            <span class="field-error" id="err-refEmail"></span>
+          </div>
+        </div>
+
+        <div class="btn-group btn-group--between">
+          <button class="btn btn-secondary" id="step3Back">← Back</button>
+          <button class="btn btn-success"   id="step3Submit">Submit Application ✓</button>
+        </div>
+      </div><!-- /step3 -->
+
+      <!-- ─────────────────────────────────────────
+           SUCCESS STATE (after submission)
+      ───────────────────────────────────────────── -->
+      <div id="successState" class="success-box hidden">
+        <div class="success-icon">🎉</div>
+        <h2>Application Submitted!</h2>
+        <p>Thank you for completing Form A. Please answer a short survey about your experience.</p>
+        <a href="survey.html" class="btn btn-primary">Continue to Survey →</a>
+      </div>
+
+    </div><!-- /card -->
+  </div><!-- /page-wrapper -->
+
+  <script src="script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════
+    //  FORM A (PROGRESSIVE) — Logic
+    // ══════════════════════════════════════════════
+
+    // Guard: redirect to welcome if:
+    //  a) no active session exists, OR
+    //  b) session is not for the progressive form, OR
+    //  c) tester never went through the consent page
+    const session = loadSession();
+    const consented = sessionStorage.getItem('consentGiven') === 'yes';
+    if (!session || session.formType !== 'progressive' || !consented) {
+      window.location.href = 'index.html';
+    }
+
+    // ── Element references ──
+    const step1El       = document.getElementById('step1');
+    const step2El       = document.getElementById('step2');
+    const step3El       = document.getElementById('step3');
+    const successEl     = document.getElementById('successState');
+    const progressCont  = document.getElementById('progressContainer');
+
+    // Step 1 fields
+    const nameInput   = document.getElementById('fa-name');
+    const emailInput  = document.getElementById('fa-email');
+    const uniInput    = document.getElementById('fa-university');
+    const levelSel    = document.getElementById('fa-level');
+    const cgpaInput   = document.getElementById('fa-cgpa');
+    const schTypeGrp  = document.getElementById('fa-schType');
+
+    // Step 2 elements
+    const ineligibleMsg   = document.getElementById('ineligibleMsg');
+    const needBasedFields = document.getElementById('needBasedFields');
+    const meritSkipFields = document.getElementById('meritSkipFields');
+    const incomeSelect    = document.getElementById('fa-income');
+    const occupInput      = document.getElementById('fa-occupation');
+
+    // Step 3 fields
+    const phoneInput    = document.getElementById('fa-phone');
+    const reasonInput   = document.getElementById('fa-reason');
+    const reasonCounter = document.getElementById('fa-reasonCount');
+    const refNameInput  = document.getElementById('fa-refName');
+    const refEmailInput = document.getElementById('fa-refEmail');
+
+    // Track which "branch" was shown in step 2
+    let step2Branch = null; // 'need' | 'merit' | 'ineligible'
+    let currentStep = 1;
+    const TOTAL_STEPS = 3;
+
+    // ── Wire radio card styling ──
+    wireRadioCards(schTypeGrp);
+
+    // ── Word count on reason textarea ──
+    reasonInput.addEventListener('input', () => {
+      updateWordCount(reasonInput, reasonCounter, 150);
+    });
+
+    // ─────────────────────────────────────────────
+    //  STEP 1 → STEP 2
+    // ─────────────────────────────────────────────
+    document.getElementById('step1Next').addEventListener('click', () => {
+      // Validate all step-1 fields
+      const ok = [
+        validateField(nameInput,  Rules.required),
+        validateField(emailInput, Rules.email),
+        validateField(uniInput,   Rules.required),
+        validateField(levelSel,   Rules.level),
+        validateField(cgpaInput,  Rules.cgpa),
+        validateRadioGroup('fa-scholarshipType', schTypeGrp.parentElement),
+      ].every(Boolean);
+
+      if (!ok) return; // stop if any field invalid
+
+      const cgpa      = parseFloat(cgpaInput.value);
+      const schType   = document.querySelector('input[name="fa-scholarshipType"]:checked').value;
+      const isNeed    = schType === 'need';
+      const eligible  = cgpa >= ELIGIBILITY_CGPA;
+
+      // Update session tracking
+      const s = loadSession();
+      s.lastStepReached = 2;
+
+      // Count fields asked in step 1 (always 6: name, email, uni, level, cgpa, schType)
+      s.fieldsAsked = 6;
+      // Need-based applicants will get 2 more; merit-based 0 more from step 2
+      saveSession(s);
+
+      // Show step 2, hide step 1
+      step1El.classList.add('hidden');
+      step2El.classList.remove('hidden');
+      currentStep = 2;
+      updateProgress(currentStep);
+      scrollToTop();
+
+      // Hide all step-2 sub-panels first
+      ineligibleMsg.classList.add('hidden');
+      needBasedFields.classList.add('hidden');
+      meritSkipFields.classList.add('hidden');
+
+      // Decide which branch to show
+      if (!eligible) {
+        // CGPA < 3.0 — not eligible, stop here
+        step2Branch = 'ineligible';
+        ineligibleMsg.classList.remove('hidden');
+        progressCont.classList.add('hidden'); // hide progress for ineligible
+
+        // Record as abandoned (did not complete) at step 2
+        abandonSession(2);
+
+      } else if (isNeed) {
+        // Need-based + eligible — ask income & occupation
+        step2Branch = 'need';
+        needBasedFields.classList.remove('hidden');
+
+      } else {
+        // Merit-based + eligible — skip straight through
+        step2Branch = 'merit';
+        meritSkipFields.classList.remove('hidden');
+      }
+    });
+
+    // ─────────────────────────────────────────────
+    //  STEP 2 (Need) → STEP 3
+    // ─────────────────────────────────────────────
+    document.getElementById('step2NextNeed').addEventListener('click', () => {
+      const ok = [
+        validateField(incomeSelect, Rules.incomeRange),
+        validateField(occupInput,   Rules.required),
+      ].every(Boolean);
+      if (!ok) return;
+
+      const s = loadSession();
+      s.fieldsAsked    += 2; // income + occupation
+      s.unneededFields  = 0; // need-based: these fields are needed
+      s.lastStepReached = 3;
+      saveSession(s);
+
+      goToStep3();
+    });
+
+    // ─────────────────────────────────────────────
+    //  STEP 2 (Merit) → STEP 3
+    // ─────────────────────────────────────────────
+    document.getElementById('step2NextMerit').addEventListener('click', () => {
+      const s = loadSession();
+      s.fieldsAsked    += 0; // no extra fields for merit in step 2
+      s.unneededFields  = 0; // no unneeded fields (progressive form never asked them)
+      s.lastStepReached = 3;
+      saveSession(s);
+
+      goToStep3();
+    });
+
+    // ─────────────────────────────────────────────
+    //  STEP 3 → SUBMIT
+    // ─────────────────────────────────────────────
+    document.getElementById('step3Submit').addEventListener('click', () => {
+      const ok = [
+        validateField(phoneInput,    Rules.phone),
+        validateField(reasonInput,   Rules.reason),
+        validateField(refNameInput,  Rules.refereeName),
+        validateField(refEmailInput, Rules.refereeEmail),
+      ].every(Boolean);
+      if (!ok) return;
+
+      // Update session: add 3 final fields (phone, reason, referee name+email = 4 fields)
+      const s = loadSession();
+      s.fieldsAsked += 4; // phone + reason + refName + refEmail
+      saveSession(s);
+
+      // Finalize: marks completed = true, sets endTime & totalSeconds, saves to records
+      finalizeSession({
+        lastStepReached: 3,
+        formData: {
+          scholarshipType: document.querySelector('input[name="fa-scholarshipType"]:checked')?.value,
+          level: levelSel.value,
+          cgpa: cgpaInput.value,
+        },
+      });
+
+      // Show success, hide form steps
+      step3El.classList.add('hidden');
+      progressCont.classList.add('hidden');
+      successEl.classList.remove('hidden');
+      scrollToTop();
+    });
+
+    // ─────────────────────────────────────────────
+    //  BACK BUTTONS
+    // ─────────────────────────────────────────────
+    document.getElementById('step2BackNeed').addEventListener('click', () => {
+      goToStep1();
+    });
+
+    document.getElementById('step2BackMerit').addEventListener('click', () => {
+      goToStep1();
+    });
+
+    document.getElementById('step3Back').addEventListener('click', () => {
+      // Return to whichever branch of step 2 was shown
+      step3El.classList.add('hidden');
+      step2El.classList.remove('hidden');
+      currentStep = 2;
+      updateProgress(currentStep);
+      scrollToTop();
+    });
+
+    // ─────────────────────────────────────────────
+    //  HELPERS (local to this page)
+    // ─────────────────────────────────────────────
+
+    /** Show step 3, hide step 2 */
+    function goToStep3() {
+      step2El.classList.add('hidden');
+      step3El.classList.remove('hidden');
+      currentStep = 3;
+      updateProgress(currentStep);
+      scrollToTop();
+    }
+
+    /** Return to step 1 from step 2 */
+    function goToStep1() {
+      step2El.classList.add('hidden');
+      step1El.classList.remove('hidden');
+      currentStep = 1;
+      updateProgress(currentStep);
+      scrollToTop();
+    }
+
+    /**
+     * Update the shared progress bar and step dots.
+     * For Form A there are always 3 steps.
+     */
+    function updateProgress(step) {
+      setProgress(step, TOTAL_STEPS); // defined in script.js
+      const pct = Math.round((step / TOTAL_STEPS) * 100);
+      document.getElementById('progressPct').textContent = pct + '%';
+    }
+  </script>
+
+</body>
+</html>

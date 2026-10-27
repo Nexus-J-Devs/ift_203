@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scholarship Form Study — Welcome</title>
+  <meta name="description" content="IFT 203 research study comparing two scholarship application form designs. Pick a form to begin." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Welcome-page specific styles ── */
+    .form-choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 580px) {
+      .form-choice-grid { grid-template-columns: 1fr; }
+    }
+
+    .form-choice-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border: 2px solid var(--clr-neutral-300);
+      border-radius: var(--radius-lg);
+      background: var(--clr-white);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+
+    .form-choice-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .form-choice-card--a:hover { border-color: var(--clr-primary); }
+    .form-choice-card--b:hover { border-color: var(--clr-success); }
+
+    .choice-icon {
+      font-size: 2.8rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .choice-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--clr-neutral-900);
+      margin-bottom: 0.4rem;
+    }
+
+    .choice-desc {
+      font-size: 0.85rem;
+      color: var(--clr-neutral-500);
+      line-height: 1.5;
+    }
+
+    .choice-btn {
+      margin-top: 1.25rem;
+      padding: 0.55rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: filter 0.15s;
+    }
+
+    .form-choice-card--a .choice-btn {
+      background: var(--clr-primary);
+      color: white;
+    }
+
+    .form-choice-card--b .choice-btn {
+      background: var(--clr-success);
+      color: white;
+    }
+
+    .choice-btn:hover { filter: brightness(1.1); }
+
+    .pick-note {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--clr-neutral-500);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- ── Hero ── -->
+    <div class="hero">
+      <span class="hero-icon">🎓</span>
+      <h1>Scholarship Form<br>Research Study</h1>
+      <p>
+        We are studying how form design affects trust and ease of use.<br>
+        You will complete a short fictional scholarship form, then answer 4 quick questions about your experience.
+      </p>
+    </div>
+
+    <!-- ── Study info card ── -->
+    <div class="card">
+
+      <div class="page-header" style="margin-bottom: 1.25rem;">
+        <span class="badge">IFT 203 — Research Exercise</span>
+        <h1 style="font-size:1.4rem;">What will you do?</h1>
+      </div>
+
+      <ul class="info-list" style="margin-bottom:1.5rem;">
+        <li>
+          <span class="icon">--</span>
+          <span>Pick one of the two form versions below and fill it in. <br> <strong>Use fictional details only — no real information.</strong></span>
+        </li>
+        <li>
+          <span class="icon">--</span>
+          <span>Your completion time is recorded automatically. No personal data leaves your device.</span>
+        </li>
+        <li>
+          <span class="icon">--</span>
+          <span>After the form, answer 4 quick questions about how the form felt to use.</span>
+        </li>
+        <li>
+          <span class="icon">--</span>
+          <span>Only anonymous results (form type, time, survey scores) are shared with the researcher. Nothing you type into the form is collected.</span>
+        </li>
+      </ul>
+
+      <hr class="divider" />
+
+      <!-- ── Form selection ── -->
+      <h2 style="font-size:1rem; font-weight:700; color:var(--clr-neutral-700); margin-bottom:0.25rem;">
+        Choose a form to try:
+      </h2>
+      <p style="font-size:0.85rem; color:var(--clr-neutral-500);">Pick one to start. Please use fake details only.</p>
+
+      <div class="form-choice-grid">
+
+        <!-- Progressive Form -->
+        <div class="form-choice-card form-choice-card--a" id="chooseA" role="button" tabindex="0" aria-label="Start Progressive Form">
+          <span class="choice-title">Progressive Form</span>
+          <p class="choice-desc">Asks for details step by step, only when they are needed.</p>
+          <button class="choice-btn" onclick="go('a')">Start →</button>
+        </div>
+
+        <!-- Conventional Form -->
+        <div class="form-choice-card form-choice-card--b" id="chooseB" role="button" tabindex="0" aria-label="Start Conventional Form">
+          <span class="choice-title">Conventional Form</span>
+          <p class="choice-desc">Asks for everything on one page, all at once.</p>
+          <button class="choice-btn" onclick="go('b')">Start →</button>
+        </div>
+
+      </div>
+
+      <p class="pick-note">
+        Each form covers the same fictional scholarship application. The content is identical — only the presentation differs.
+      </p>
+
+    </div><!-- /card -->
+
+    <!-- Researcher link (quiet) -->
+    <p class="text-center mt-6" style="font-size:0.78rem; color:var(--clr-neutral-300);">
+      <a href="results.html" style="color:var(--clr-neutral-300); text-decoration:underline;">Researcher Results Dashboard</a>
+    </p>
+
+  </div><!-- /page-wrapper -->
+
+  <script src="script.js"></script>
+  <script>
+    // ── Welcome page logic ──
+    // No random assignment. The tester picks their form.
+    // go(type) saves the choice and sends to the consent page.
+
+    /**
+     * Called when the tester clicks a form button.
+     * Stores the intended form type in sessionStorage,
+     * then redirects to the consent page which will forward to the right form.
+     * @param {'a'|'b'} type
+     */
+    function go(type) {
+      // Save the pending choice so consent.html knows where to send the tester
+      sessionStorage.setItem('pendingForm', type);
+      window.location.href = 'consent.html';
+    }
+
+    // Allow keyboard activation of the whole card too
+    document.getElementById('chooseA').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') go('a');
+    });
+    document.getElementById('chooseB').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') go('b');
+    });
+  </script>
+
+</body>
+</html>

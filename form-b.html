@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scholarship Application — Conventional Form</title>
+  <meta name="description" content="Conventional all-in-one scholarship application form for a research study." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- Research notice -->
+    <div class="research-notice">
+      <span class="notice-icon">⚠️</span>
+      <span><strong>This is a research test.</strong> Do not enter real personal details.</span>
+    </div>
+
+    <div class="text-center">
+      <span class="form-tag form-tag--b">Conventional Form — All Fields on One Page</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN CARD
+    ══════════════════════════════════════════════ -->
+    <div class="card">
+
+      <!-- Page title -->
+      <div class="page-header" style="margin-bottom:1.5rem;">
+        <span class="badge">Scholarship Application Form</span>
+        <h1 style="font-size:1.5rem;">Complete Your Application</h1>
+        <p>Please fill in all the fields below. Fields marked <span style="color:var(--clr-danger)">*</span> are required.</p>
+      </div>
+
+      <!-- ── SECTION 1: Personal Information ── -->
+      <h2 class="section-title">Personal Information</h2>
+
+      <!-- Field 1: Full Name -->
+      <div class="form-group">
+        <label for="fb-name">Full Name <span class="required">*</span></label>
+        <input type="text" id="fb-name" class="form-control" placeholder="e.g. Ada Okafor" autocomplete="off" />
+        <span class="field-error" id="err-fb-name"></span>
+      </div>
+
+      <!-- Field 2: Email -->
+      <div class="form-group">
+        <label for="fb-email">Email Address <span class="required">*</span></label>
+        <input type="email" id="fb-email" class="form-control" placeholder="you@example.com" autocomplete="off" />
+        <span class="field-error" id="err-fb-email"></span>
+      </div>
+
+      <!-- Field 3: Phone -->
+      <div class="form-group">
+        <label for="fb-phone">Phone Number <span class="required">*</span></label>
+        <input type="tel" id="fb-phone" class="form-control" placeholder="e.g. +234 801 234 5678" autocomplete="off" />
+        <span class="field-error" id="err-fb-phone"></span>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- ── SECTION 2: Academic Information ── -->
+      <h2 class="section-title">Academic Information</h2>
+
+      <!-- Field 4: University & Course -->
+      <div class="form-group">
+        <label for="fb-university">University and Course <span class="required">*</span></label>
+        <input type="text" id="fb-university" class="form-control" placeholder="e.g. University of Lagos — Computer Science" autocomplete="off" />
+        <span class="field-error" id="err-fb-university"></span>
+      </div>
+
+      <!-- Field 5: Level -->
+      <div class="form-group">
+        <label for="fb-level">Level <span class="required">*</span></label>
+        <select id="fb-level" class="form-control">
+          <option value="">Select your level</option>
+          <option value="100">100 Level</option>
+          <option value="200">200 Level</option>
+          <option value="300">300 Level</option>
+          <option value="400">400 Level</option>
+          <option value="500">500 Level</option>
+        </select>
+        <span class="field-error" id="err-fb-level"></span>
+      </div>
+
+      <!-- Field 6: CGPA -->
+      <div class="form-group">
+        <label for="fb-cgpa">CGPA <span class="required">*</span> <span class="hint">(0.00 – 5.00)</span></label>
+        <input type="number" id="fb-cgpa" class="form-control" placeholder="e.g. 3.75" min="0" max="5" step="0.01" autocomplete="off" />
+        <span class="field-error" id="err-fb-cgpa"></span>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- ── SECTION 3: Scholarship Details ── -->
+      <h2 class="section-title">Scholarship Details</h2>
+
+      <!-- Field 7: Scholarship Type -->
+      <div class="form-group">
+        <label>Scholarship Type <span class="required">*</span></label>
+        <div class="radio-group radio-group--inline" id="fb-schType">
+          <label class="radio-option">
+            <input type="radio" name="fb-scholarshipType" value="merit" />
+            🏆 Merit-based
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="fb-scholarshipType" value="need" />
+            🤝 Need-based
+          </label>
+        </div>
+        <span class="field-error" id="err-fb-schType"></span>
+      </div>
+
+      <!-- Field 8: Household Income Range -->
+      <div class="form-group">
+        <label for="fb-income">
+          Household Income Range <span class="required">*</span>
+          <span class="hint">(required for Need-based)</span>
+        </label>
+        <select id="fb-income" class="form-control">
+          <option value="">Select income range</option>
+          <option value="below-100k">Below ₦100,000 / month</option>
+          <option value="100k-300k">₦100,000 – ₦300,000 / month</option>
+          <option value="300k-500k">₦300,000 – ₦500,000 / month</option>
+          <option value="above-500k">Above ₦500,000 / month</option>
+        </select>
+        <span class="field-error" id="err-fb-income"></span>
+      </div>
+
+      <!-- Field 9: Parent/Guardian Occupation -->
+      <div class="form-group">
+        <label for="fb-occupation">
+          Parent / Guardian Occupation <span class="required">*</span>
+          <span class="hint">(required for Need-based)</span>
+        </label>
+        <input type="text" id="fb-occupation" class="form-control" placeholder="e.g. Farmer, Civil Servant, Self-employed" autocomplete="off" />
+        <span class="field-error" id="err-fb-occupation"></span>
+      </div>
+
+      <!-- Field 10: Reason for Applying -->
+      <div class="form-group">
+        <label for="fb-reason">Reason for Applying <span class="required">*</span> <span class="hint">max 150 words</span></label>
+        <textarea id="fb-reason" class="form-control" placeholder="Briefly explain why you are applying for this scholarship..." rows="5"></textarea>
+        <div class="word-count" id="fb-reasonCount">0 / 150 words</div>
+        <span class="field-error" id="err-fb-reason"></span>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- ── SECTION 4: Referee ── -->
+      <h2 class="section-title">Referee Details <span style="font-weight:400;font-size:0.8em;color:var(--clr-neutral-500)">(required if CGPA ≥ 3.0)</span></h2>
+
+      <!-- Field 11a: Referee Name -->
+      <div class="form-group">
+        <label for="fb-refName">Referee Full Name <span class="required">*</span></label>
+        <input type="text" id="fb-refName" class="form-control" placeholder="e.g. Prof. James Adeyemi" autocomplete="off" />
+        <span class="field-error" id="err-fb-refName"></span>
+      </div>
+
+      <!-- Field 11b: Referee Email -->
+      <div class="form-group">
+        <label for="fb-refEmail">Referee Email Address <span class="required">*</span></label>
+        <input type="email" id="fb-refEmail" class="form-control" placeholder="referee@university.edu" autocomplete="off" />
+        <span class="field-error" id="err-fb-refEmail"></span>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- ── SECTION 5: Bank Account (extra/unnecessary field) ── -->
+      <h2 class="section-title">Payment Details <span style="font-weight:400;font-size:0.8em;color:var(--clr-neutral-500)">(for approved awards only)</span></h2>
+
+      <div class="alert alert--warning" style="margin-bottom:1.25rem;">
+        <span class="alert-icon">💳</span>
+        <div class="alert-content">
+          <p>We collect your bank account number in advance for approved scholarship disbursements. This field is required even if your application is pending.</p>
+        </div>
+      </div>
+
+      <!-- Field 12: Bank Account Number -->
+      <div class="form-group">
+        <label for="fb-bank">Bank Account Number <span class="required">*</span> <span class="hint">10 digits</span></label>
+        <input type="text" id="fb-bank" class="form-control" placeholder="e.g. 0123456789" maxlength="10" autocomplete="off" />
+        <span class="field-error" id="err-fb-bank"></span>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="mt-6">
+        <button class="btn btn-success btn-full" id="fbSubmit">
+          Submit Application ✓
+        </button>
+      </div>
+
+      <!-- ── SUCCESS STATE ── -->
+      <div id="fbSuccess" class="success-box hidden" style="margin-top:0;">
+        <div class="success-icon">🎉</div>
+        <h2>Application Submitted!</h2>
+        <p>Thank you for completing Form B. Please answer a short survey about your experience.</p>
+        <a href="survey.html" class="btn btn-primary">Continue to Survey →</a>
+      </div>
+
+    </div><!-- /card -->
+  </div><!-- /page-wrapper -->
+
+  <script src="script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════
+    //  FORM B (CONVENTIONAL) — Logic
+    // ══════════════════════════════════════════════
+
+    // Guard: redirect to welcome if:
+    //  a) no active session exists, OR
+    //  b) session is not for the conventional form, OR
+    //  c) tester never went through the consent page
+    const session = loadSession();
+    const consented = sessionStorage.getItem('consentGiven') === 'yes';
+    if (!session || session.formType !== 'conventional' || !consented) {
+      window.location.href = 'index.html';
+    }
+
+    // ── Element references ──
+    const schTypeGrp = document.getElementById('fb-schType');
+    const incomeEl   = document.getElementById('fb-income');
+    const occupEl    = document.getElementById('fb-occupation');
+    const cgpaEl     = document.getElementById('fb-cgpa');
+    const reasonEl   = document.getElementById('fb-reason');
+    const reasonCnt  = document.getElementById('fb-reasonCount');
+    const refNameEl  = document.getElementById('fb-refName');
+    const refEmailEl = document.getElementById('fb-refEmail');
+    const bankEl     = document.getElementById('fb-bank');
+    const submitBtn  = document.getElementById('fbSubmit');
+    const formCard   = document.querySelector('.card');
+    const successDiv = document.getElementById('fbSuccess');
+
+    // ── Wire radio card styling ──
+    wireRadioCards(schTypeGrp);
+
+    // ── Live word count ──
+    reasonEl.addEventListener('input', () => {
+      updateWordCount(reasonEl, reasonCnt, 150);
+    });
+
+    // ─────────────────────────────────────────────
+    //  SUBMIT HANDLER
+    // ─────────────────────────────────────────────
+    submitBtn.addEventListener('click', () => {
+      const cgpa    = parseFloat(cgpaEl.value);
+      const schType = document.querySelector('input[name="fb-scholarshipType"]:checked')?.value;
+      const isNeed  = schType === 'need';
+      const eligible = cgpa >= ELIGIBILITY_CGPA;
+
+      // ── Validate all fields ──
+      const results = [
+        validateField(document.getElementById('fb-name'),       Rules.required),
+        validateField(document.getElementById('fb-email'),      Rules.email),
+        validateField(document.getElementById('fb-phone'),      Rules.phone),
+        validateField(document.getElementById('fb-university'), Rules.required),
+        validateField(document.getElementById('fb-level'),      Rules.level),
+        validateField(cgpaEl,                                   Rules.cgpa),
+        validateRadioGroup('fb-scholarshipType', schTypeGrp.parentElement),
+        // Income & occupation: required only for need-based
+        isNeed
+          ? validateField(incomeEl, Rules.incomeRange)
+          : (clearFieldError(incomeEl), true),
+        isNeed
+          ? validateField(occupEl, Rules.required)
+          : (clearFieldError(occupEl), true),
+        validateField(reasonEl, Rules.reason),
+        // Referee: required only if CGPA >= 3.0
+        eligible
+          ? validateField(refNameEl,  Rules.refereeName)
+          : (clearFieldError(refNameEl), true),
+        eligible
+          ? validateField(refEmailEl, Rules.refereeEmail)
+          : (clearFieldError(refEmailEl), true),
+        validateField(bankEl, Rules.bankAccount),
+      ];
+
+      const allValid = results.every(Boolean);
+      if (!allValid) {
+        // Scroll to first invalid field
+        const firstInvalid = formCard.querySelector('.is-invalid');
+        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // ── Count fields asked and unneeded fields ──
+      // Form B always shows all 12 fields (fields 1–12).
+      // Unneeded = fields that weren't required for this particular applicant.
+      let unneeded = 0;
+
+      // If merit-based: income (field 8) and occupation (field 9) were not needed
+      if (!isNeed) unneeded += 2;
+
+      // If CGPA < 3.0: referee (field 11a, 11b) not needed (but Form B still asked)
+      if (!eligible) unneeded += 2;
+
+      // Bank account (field 12) is never needed at this stage — always unneeded
+      unneeded += 1;
+
+      // ── Finalize session ──
+      finalizeSession({
+        lastStepReached: 1,       // Form B is one page = step 1
+        fieldsAsked:     12,      // All 12 fields shown
+        unneededFields:  unneeded,
+        formData: {
+          scholarshipType: schType,
+          level:  document.getElementById('fb-level').value,
+          cgpa:   cgpaEl.value,
+        },
+      });
+
+      // ── Show success, hide form content ──
+      // Hide all children of the card except the success div
+      Array.from(formCard.children).forEach(child => {
+        if (child.id !== 'fbSuccess') child.classList.add('hidden');
+      });
+      successDiv.classList.remove('hidden');
+      scrollToTop();
+    });
+
+    // ─────────────────────────────────────────────
+    //  HELPER: clear error state from an optional field
+    // ─────────────────────────────────────────────
+    function clearFieldError(field) {
+      field.classList.remove('is-invalid');
+      const err = field.parentElement.querySelector('.field-error');
+      if (err) err.classList.remove('visible');
+      return true;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experience Survey — Scholarship Form Study</title>
+  <meta name="description" content="Short post-form survey measuring trust and usability for the scholarship form research study." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!--
+    NETLIFY FORMS — Hidden detection form.
+    Netlify scans HTML at deploy time and registers any form with data-netlify="true".
+    The actual data is posted via fetch() in script.js:submitToNetlify().
+    This element itself is never shown to the tester.
+  -->
+  <form name="study-results" data-netlify="true" hidden>
+    <input type="hidden" name="form-name"      value="study-results" />
+    <input type="hidden" name="sessionId" />
+    <input type="hidden" name="formType" />
+    <input type="hidden" name="totalSeconds" />
+    <input type="hidden" name="completed" />
+    <input type="hidden" name="fieldsAsked" />
+    <input type="hidden" name="unneededFields" />
+    <input type="hidden" name="trustScore" />
+    <input type="hidden" name="q1" />
+    <input type="hidden" name="q2" />
+    <input type="hidden" name="q3" />
+    <input type="hidden" name="q4" />
+  </form>
+
+  <div class="page-wrapper">
+
+    <!-- Research notice -->
+    <div class="research-notice">
+      <span class="notice-icon">⚠️</span>
+      <span><strong>This is a research test.</strong> Do not enter real personal details.</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN CARD
+    ══════════════════════════════════════════════ -->
+    <div class="card">
+
+      <!-- Header -->
+      <div class="page-header">
+        <span class="badge">Post-Form Survey</span>
+        <h1 style="font-size:1.75rem;">How Was Your Experience?</h1>
+        <p>
+          Please rate the form you just completed on the four questions below.<br>
+          There are no right or wrong answers — your honest opinion helps the research.
+        </p>
+      </div>
+
+      <form id="surveyForm" novalidate>
+
+        <!-- ── Q1 ── -->
+        <div class="form-group" id="grp-q1">
+          <label style="font-size:1rem; margin-bottom:0.75rem;">
+            <strong>1.</strong> I trusted this form with my personal information.
+            <span class="required">*</span>
+          </label>
+          <div class="scale-group" role="group" aria-label="Question 1 rating">
+            <label class="scale-option"><input type="radio" name="q1" value="1" /><span class="scale-label">1</span></label>
+            <label class="scale-option"><input type="radio" name="q1" value="2" /><span class="scale-label">2</span></label>
+            <label class="scale-option"><input type="radio" name="q1" value="3" /><span class="scale-label">3</span></label>
+            <label class="scale-option"><input type="radio" name="q1" value="4" /><span class="scale-label">4</span></label>
+            <label class="scale-option"><input type="radio" name="q1" value="5" /><span class="scale-label">5</span></label>
+          </div>
+          <div class="scale-ends">
+            <span>Strongly disagree</span>
+            <span>Strongly agree</span>
+          </div>
+          <span class="field-error" id="err-q1"></span>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ── Q2 ── -->
+        <div class="form-group" id="grp-q2">
+          <label style="font-size:1rem; margin-bottom:0.75rem;">
+            <strong>2.</strong> The form only asked for what it needed.
+            <span class="required">*</span>
+          </label>
+          <div class="scale-group" role="group" aria-label="Question 2 rating">
+            <label class="scale-option"><input type="radio" name="q2" value="1" /><span class="scale-label">1</span></label>
+            <label class="scale-option"><input type="radio" name="q2" value="2" /><span class="scale-label">2</span></label>
+            <label class="scale-option"><input type="radio" name="q2" value="3" /><span class="scale-label">3</span></label>
+            <label class="scale-option"><input type="radio" name="q2" value="4" /><span class="scale-label">4</span></label>
+            <label class="scale-option"><input type="radio" name="q2" value="5" /><span class="scale-label">5</span></label>
+          </div>
+          <div class="scale-ends">
+            <span>Strongly disagree</span>
+            <span>Strongly agree</span>
+          </div>
+          <span class="field-error" id="err-q2"></span>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ── Q3 ── -->
+        <div class="form-group" id="grp-q3">
+          <label style="font-size:1rem; margin-bottom:0.75rem;">
+            <strong>3.</strong> The form was easy to use.
+            <span class="required">*</span>
+          </label>
+          <div class="scale-group" role="group" aria-label="Question 3 rating">
+            <label class="scale-option"><input type="radio" name="q3" value="1" /><span class="scale-label">1</span></label>
+            <label class="scale-option"><input type="radio" name="q3" value="2" /><span class="scale-label">2</span></label>
+            <label class="scale-option"><input type="radio" name="q3" value="3" /><span class="scale-label">3</span></label>
+            <label class="scale-option"><input type="radio" name="q3" value="4" /><span class="scale-label">4</span></label>
+            <label class="scale-option"><input type="radio" name="q3" value="5" /><span class="scale-label">5</span></label>
+          </div>
+          <div class="scale-ends">
+            <span>Strongly disagree</span>
+            <span>Strongly agree</span>
+          </div>
+          <span class="field-error" id="err-q3"></span>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ── Q4 ── -->
+        <div class="form-group" id="grp-q4">
+          <label style="font-size:1rem; margin-bottom:0.75rem;">
+            <strong>4.</strong> I would feel safe submitting my real details here.
+            <span class="required">*</span>
+          </label>
+          <div class="scale-group" role="group" aria-label="Question 4 rating">
+            <label class="scale-option"><input type="radio" name="q4" value="1" /><span class="scale-label">1</span></label>
+            <label class="scale-option"><input type="radio" name="q4" value="2" /><span class="scale-label">2</span></label>
+            <label class="scale-option"><input type="radio" name="q4" value="3" /><span class="scale-label">3</span></label>
+            <label class="scale-option"><input type="radio" name="q4" value="4" /><span class="scale-label">4</span></label>
+            <label class="scale-option"><input type="radio" name="q4" value="5" /><span class="scale-label">5</span></label>
+          </div>
+          <div class="scale-ends">
+            <span>Strongly disagree</span>
+            <span>Strongly agree</span>
+          </div>
+          <span class="field-error" id="err-q4"></span>
+        </div>
+
+        <!-- Submit Survey -->
+        <div class="mt-6">
+          <button type="submit" class="btn btn-success btn-full" id="surveySubmit">
+            Submit Survey ✓
+          </button>
+        </div>
+
+      </form>
+
+      <!-- ── THANK YOU STATE ── -->
+      <div id="thankYouState" class="success-box hidden">
+        <div class="success-icon">🙏</div>
+        <h2>Thank You!</h2>
+        <p>Your anonymous results have been recorded. You have completed this research exercise.</p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <a href="index.html" class="btn btn-secondary">← Back to Start</a>
+          <a href="results.html" class="btn btn-primary">View Research Results →</a>
+        </div>
+        <p style="margin-top:1.25rem; font-size:0.82rem; color:var(--clr-neutral-500);">
+          Want to try the other form version? Go back to start and pick a different form.
+        </p>
+      </div>
+
+    </div><!-- /card -->
+  </div><!-- /page-wrapper -->
+
+  <script src="script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════
+    //  SURVEY PAGE LOGIC
+    // ══════════════════════════════════════════════
+
+    const surveyForm    = document.getElementById('surveyForm');
+    const thankYouState = document.getElementById('thankYouState');
+
+    /**
+     * Validate that a radio group question has been answered.
+     * Returns the selected integer value, or null if unanswered.
+     * Also shows/hides the associated .field-error element.
+     *
+     * @param {string} name - radio input name (e.g. 'q1')
+     * @returns {number|null}
+     */
+    function getScaleValue(name) {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      const errEl   = document.getElementById(`err-${name}`);
+
+      if (!checked) {
+        errEl.textContent = 'Please select a rating.';
+        errEl.classList.add('visible');
+        return null;
+      }
+
+      errEl.classList.remove('visible');
+      return parseInt(checked.value, 10);
+    }
+
+    surveyForm.addEventListener('submit', e => {
+      e.preventDefault();
+
+      // Collect and validate all four answers
+      const q1 = getScaleValue('q1');
+      const q2 = getScaleValue('q2');
+      const q3 = getScaleValue('q3');
+      const q4 = getScaleValue('q4');
+
+      // Stop if any question unanswered
+      if (q1 === null || q2 === null || q3 === null || q4 === null) return;
+
+      // Calculate the average trust score (1 – 5 scale)
+      const trustScore = (q1 + q2 + q3 + q4) / 4;
+
+      // ── Find and update the most recent completed session record ──
+      // The session was finalized (moved from SESSION_KEY to STORAGE_KEY) by the form page.
+      // We need to find the most recently added record and attach the survey answers.
+      const records = loadAllRecords();
+      let updatedRecord = null;
+
+      if (records.length > 0) {
+        // The last record in the array is from this participant
+        updatedRecord = records[records.length - 1];
+        updatedRecord.surveyAnswers = [q1, q2, q3, q4];
+        updatedRecord.trustScore    = Math.round(trustScore * 100) / 100; // round to 2dp
+        saveRecord(updatedRecord); // update it in localStorage
+      }
+
+      // ── Submit anonymous results to Netlify Forms (fails silently when local) ──
+      if (updatedRecord) {
+        submitToNetlify(updatedRecord); // defined in script.js
+      }
+
+      // ── Show thank-you, hide the form ──
+      surveyForm.classList.add('hidden');
+      thankYouState.classList.remove('hidden');
+      scrollToTop();
+    });
+  </script>
+
+</body>
+</html>

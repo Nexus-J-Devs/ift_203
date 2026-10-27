@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Results — Scholarship Form Study</title>
+  <meta name="description" content="Researcher dashboard showing comparative results for the scholarship form usability study." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Extra styles specific to the results page */
+    .legend { display: flex; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 4px; }
+    .swatch-a { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .swatch-b { background: linear-gradient(90deg, #16a34a, #4ade80); }
+
+    /* Raw data table toggle */
+    #rawDataSection { margin-top: 2rem; }
+
+    /* Action buttons row */
+    .action-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+
+    /* No-data message */
+    .no-data { text-align: center; padding: 3rem 1rem; color: var(--clr-neutral-500); }
+    .no-data .no-data-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+    /* Form type badges in table */
+    .badge-a { background: #dbeafe; color: #1d4ed8; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .badge-b { background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .badge-done { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; }
+    .badge-drop { background: #fee2e2; color: #7f1d1d; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper--wide">
+
+    <!-- ── Header ── -->
+    <div class="page-header" style="margin-bottom: 2rem;">
+      <span class="badge">Researcher Dashboard</span>
+      <h1>Research Results</h1>
+      <p>Comparing Form A (Progressive Disclosure) vs Form B (Conventional) across all recorded participants.</p>
+    </div>
+
+    <!-- ── Action Buttons ── -->
+    <div class="action-row">
+      <button class="btn btn-primary" id="refreshBtn">🔄 Refresh Data</button>
+      <button class="btn btn-secondary" id="downloadBtn">⬇️ Download CSV</button>
+      <button class="btn btn-danger" id="clearBtn">🗑️ Clear All Data</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         NO DATA STATE
+    ═══════════════════════════════════════════ -->
+    <div id="noDataState" class="card no-data hidden">
+      <div class="no-data-icon">📭</div>
+      <h2 style="margin-bottom:0.5rem; color:var(--clr-neutral-900);">No Participant Data Yet</h2>
+      <p>Ask participants to go through <a href="index.html">the study flow</a> first.<br>Data will appear here once at least one form is completed.</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         RESULTS CONTENT (shown when data exists)
+    ═══════════════════════════════════════════ -->
+    <div id="resultsContent" class="hidden">
+
+      <!-- ── Summary Metric Cards ── -->
+      <div class="metrics-grid" id="metricsGrid">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- ── Comparison Table ── -->
+      <div class="card mb-4" style="margin-bottom: 2rem;">
+        <h2 class="section-title" style="margin-bottom:1.25rem;">Summary Comparison</h2>
+        <div style="overflow-x:auto;">
+          <table class="results-table" id="compTable">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Form A (Progressive)</th>
+                <th>Form B (Conventional)</th>
+              </tr>
+            </thead>
+            <tbody id="compTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Bar Charts ── -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h2 class="section-title" style="margin-bottom:1.25rem;">Visual Comparison</h2>
+
+        <div class="legend">
+          <div class="legend-item"><div class="legend-swatch swatch-a"></div> Form A (Progressive)</div>
+          <div class="legend-item"><div class="legend-swatch swatch-b"></div> Form B (Conventional)</div>
+        </div>
+
+        <!-- Completion Rate -->
+        <div class="chart-section">
+          <h3>Completion Rate (%)</h3>
+          <div class="bar-chart" id="chart-completion">
+            <div class="bar-row">
+              <span class="bar-label">Form A</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--a" id="bar-completion-a" style="width:0%"></div></div>
+              <span class="bar-value" id="val-completion-a">—</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Form B</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--b" id="bar-completion-b" style="width:0%"></div></div>
+              <span class="bar-value" id="val-completion-b">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avg Time -->
+        <div class="chart-section">
+          <h3>Average Time Taken (seconds)</h3>
+          <div class="bar-chart" id="chart-time">
+            <div class="bar-row">
+              <span class="bar-label">Form A</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--a" id="bar-time-a" style="width:0%"></div></div>
+              <span class="bar-value" id="val-time-a">—</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Form B</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--b" id="bar-time-b" style="width:0%"></div></div>
+              <span class="bar-value" id="val-time-b">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avg Trust Score -->
+        <div class="chart-section">
+          <h3>Average Trust Score (out of 5)</h3>
+          <div class="bar-chart">
+            <div class="bar-row">
+              <span class="bar-label">Form A</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--a" id="bar-trust-a" style="width:0%"></div></div>
+              <span class="bar-value" id="val-trust-a">—</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Form B</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--b" id="bar-trust-b" style="width:0%"></div></div>
+              <span class="bar-value" id="val-trust-b">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avg Unneeded Fields -->
+        <div class="chart-section">
+          <h3>Average Unneeded Fields Shown</h3>
+          <div class="bar-chart">
+            <div class="bar-row">
+              <span class="bar-label">Form A</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--a" id="bar-unneeded-a" style="width:0%"></div></div>
+              <span class="bar-value" id="val-unneeded-a">—</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Form B</span>
+              <div class="bar-track"><div class="bar-fill bar-fill--b" id="bar-unneeded-b" style="width:0%"></div></div>
+              <span class="bar-value" id="val-unneeded-b">—</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /charts card -->
+
+      <!-- ── Raw Participant Records ── -->
+      <div class="card" id="rawDataSection">
+        <h2 class="section-title" style="margin-bottom:1.25rem;">
+          All Participant Records
+          <span id="totalCount" style="font-weight:400; font-size:0.85em; color:var(--clr-neutral-500);"></span>
+        </h2>
+        <div style="overflow-x:auto;">
+          <table class="results-table" id="rawTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Form</th>
+                <th>Completed</th>
+                <th>Time (s)</th>
+                <th>Fields Asked</th>
+                <th>Unneeded</th>
+                <th>Trust Score</th>
+                <th>Survey (Q1–Q4)</th>
+                <th>Last Step</th>
+                <th>Started</th>
+              </tr>
+            </thead>
+            <tbody id="rawTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /resultsContent -->
+
+  </div><!-- /page-wrapper--wide -->
+
+  <script src="script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════
+    //  RESULTS PAGE LOGIC
+    // ══════════════════════════════════════════════
+
+    // ── DOM references ──
+    const noDataEl       = document.getElementById('noDataState');
+    const resultsEl      = document.getElementById('resultsContent');
+    const metricsGrid    = document.getElementById('metricsGrid');
+    const compTableBody  = document.getElementById('compTableBody');
+    const rawTableBody   = document.getElementById('rawTableBody');
+    const totalCountEl   = document.getElementById('totalCount');
+
+    /**
+     * Main render function.
+     * Loads all records from localStorage and populates every section of the page.
+     */
+    function render() {
+      const records = loadAllRecords(); // from script.js
+
+      if (!records.length) {
+        noDataEl.classList.remove('hidden');
+        resultsEl.classList.add('hidden');
+        return;
+      }
+
+      noDataEl.classList.add('hidden');
+      resultsEl.classList.remove('hidden');
+
+      // Split records into Form A and Form B groups
+      const aRecs = records.filter(r => r.formType === 'A');
+      const bRecs = records.filter(r => r.formType === 'B');
+
+      // ── Compute statistics for each group ──
+      const stats = {
+        A: computeStats(aRecs),
+        B: computeStats(bRecs),
+      };
+
+      renderMetricCards(records, stats);
+      renderCompTable(stats, aRecs, bRecs);
+      renderCharts(stats);
+      renderRawTable(records);
+
+      totalCountEl.textContent = `(${records.length} participant${records.length !== 1 ? 's' : ''})`;
+    }
+
+    /**
+     * Compute aggregate statistics for a group of records.
+     * @param {Array} recs - Array of participant records
+     * @returns {Object} Statistics object
+     */
+    function computeStats(recs) {
+      if (!recs.length) return { n: 0, completionRate: null, avgTime: null, avgTrust: null, avgUnneeded: null };
+
+      const completed    = recs.filter(r => r.completed);
+      const completionRate = (completed.length / recs.length) * 100;
+
+      const times      = recs.filter(r => r.totalSeconds != null).map(r => r.totalSeconds);
+      const trusts     = recs.filter(r => r.trustScore   != null).map(r => r.trustScore);
+      const unneeded   = recs.filter(r => r.unneededFields != null).map(r => r.unneededFields);
+
+      return {
+        n:              recs.length,
+        completionRate: completionRate,
+        avgTime:        mean(times),       // from script.js
+        avgTrust:       mean(trusts),
+        avgUnneeded:    mean(unneeded),
+      };
+    }
+
+    /**
+     * Render the summary metric cards at the top of the page.
+     */
+    function renderMetricCards(records, stats) {
+      const total = records.length;
+      const aCount = records.filter(r => r.formType === 'A').length;
+      const bCount = records.filter(r => r.formType === 'B').length;
+      const overallCompletion = records.filter(r => r.completed).length;
+      const withTrust = records.filter(r => r.trustScore != null);
+      const overallTrust = withTrust.length
+        ? mean(withTrust.map(r => r.trustScore))
+        : null;
+
+      metricsGrid.innerHTML = `
+        <div class="metric-card">
+          <div class="metric-label">Total Participants</div>
+          <div class="metric-value">${total}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Form A / Form B</div>
+          <div class="metric-value">${aCount} / ${bCount}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Overall Completion</div>
+          <div class="metric-value">${overallCompletion} / ${total}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg Trust Score</div>
+          <div class="metric-value">${overallTrust != null ? round(overallTrust, 2) : '—'} / 5</div>
+        </div>
+      `;
+    }
+
+    /**
+     * Render the comparison table with computed stats.
+     */
+    function renderCompTable(stats, aRecs, bRecs) {
+      const fmt = (val, suffix='') => val != null ? round(val, 1) + suffix : '—';
+
+      const rows = [
+        ['Participants',             `${stats.A.n}`, `${stats.B.n}`],
+        ['Completion Rate',          fmt(stats.A.completionRate, '%'), fmt(stats.B.completionRate, '%')],
+        ['Average Time',             stats.A.avgTime != null ? formatDuration(Math.round(stats.A.avgTime)) : '—',
+                                     stats.B.avgTime != null ? formatDuration(Math.round(stats.B.avgTime)) : '—'],
+        ['Average Trust Score',      fmt(stats.A.avgTrust) + (stats.A.avgTrust != null ? ' / 5' : ''),
+                                     fmt(stats.B.avgTrust) + (stats.B.avgTrust != null ? ' / 5' : '')],
+        ['Avg Unneeded Fields Shown', fmt(stats.A.avgUnneeded), fmt(stats.B.avgUnneeded)],
+      ];
+
+      compTableBody.innerHTML = rows.map(([metric, a, b]) => `
+        <tr>
+          <td><strong>${metric}</strong></td>
+          <td>${a}</td>
+          <td>${b}</td>
+        </tr>
+      `).join('');
+    }
+
+    /**
+     * Render CSS bar charts.
+     * Each metric is normalised to the max value across both groups to size the bars.
+     */
+    function renderCharts(stats) {
+      // Helper: set a bar's width and label
+      function setBar(idFill, idVal, value, max, suffix = '') {
+        const fill = document.getElementById(idFill);
+        const label = document.getElementById(idVal);
+        if (!fill || !label) return;
+
+        const pct = (max > 0 && value != null) ? Math.min((value / max) * 100, 100) : 0;
+        fill.style.width = pct + '%';
+        label.textContent = value != null ? round(value, 1) + suffix : '—';
+      }
+
+      // Completion Rate (0–100)
+      setBar('bar-completion-a', 'val-completion-a', stats.A.completionRate, 100, '%');
+      setBar('bar-completion-b', 'val-completion-b', stats.B.completionRate, 100, '%');
+
+      // Time (scale to max of both)
+      const maxTime = Math.max(stats.A.avgTime || 0, stats.B.avgTime || 0, 1);
+      setBar('bar-time-a', 'val-time-a', stats.A.avgTime, maxTime, 's');
+      setBar('bar-time-b', 'val-time-b', stats.B.avgTime, maxTime, 's');
+
+      // Trust Score (0–5)
+      setBar('bar-trust-a', 'val-trust-a', stats.A.avgTrust, 5, '');
+      setBar('bar-trust-b', 'val-trust-b', stats.B.avgTrust, 5, '');
+
+      // Unneeded fields (scale to max of both)
+      const maxUnn = Math.max(stats.A.avgUnneeded || 0, stats.B.avgUnneeded || 0, 1);
+      setBar('bar-unneeded-a', 'val-unneeded-a', stats.A.avgUnneeded, maxUnn, '');
+      setBar('bar-unneeded-b', 'val-unneeded-b', stats.B.avgUnneeded, maxUnn, '');
+    }
+
+    /**
+     * Render the raw data table showing every participant's record.
+     */
+    function renderRawTable(records) {
+      if (!records.length) { rawTableBody.innerHTML = ''; return; }
+
+      rawTableBody.innerHTML = records.map((r, i) => {
+        const formBadge = r.formType === 'A'
+          ? '<span class="badge-a">Form A</span>'
+          : '<span class="badge-b">Form B</span>';
+        const compBadge = r.completed
+          ? '<span class="badge-done">✓ Done</span>'
+          : '<span class="badge-drop">✗ Drop</span>';
+        const surveys = r.surveyAnswers
+          ? r.surveyAnswers.join(', ')
+          : '—';
+        const started = r.startTime
+          ? new Date(r.startTime).toLocaleString()
+          : '—';
+
+        return `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${formBadge}</td>
+            <td>${compBadge}</td>
+            <td>${r.totalSeconds != null ? r.totalSeconds : '—'}</td>
+            <td>${r.fieldsAsked != null ? r.fieldsAsked : '—'}</td>
+            <td>${r.unneededFields != null ? r.unneededFields : '—'}</td>
+            <td>${r.trustScore != null ? round(r.trustScore, 2) + ' / 5' : '—'}</td>
+            <td>${surveys}</td>
+            <td>${r.lastStepReached != null ? r.lastStepReached : '—'}</td>
+            <td>${started}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ─────────────────────────────────────────────
+    //  CSV EXPORT
+    // ─────────────────────────────────────────────
+
+    /**
+     * Build a CSV string from all records and trigger a browser download.
+     */
+    function downloadCSV() {
+      const records = loadAllRecords();
+      if (!records.length) { alert('No data to download yet.'); return; }
+
+      const headers = [
+        'sessionId', 'formType', 'startTime', 'endTime', 'totalSeconds',
+        'completed', 'lastStepReached', 'fieldsAsked', 'unneededFields',
+        'trustScore', 'q1', 'q2', 'q3', 'q4',
+      ];
+
+      const rows = records.map(r => [
+        r.sessionId,
+        r.formType,
+        r.startTime  || '',
+        r.endTime    || '',
+        r.totalSeconds != null ? r.totalSeconds : '',
+        r.completed ? 'TRUE' : 'FALSE',
+        r.lastStepReached != null ? r.lastStepReached : '',
+        r.fieldsAsked != null ? r.fieldsAsked : '',
+        r.unneededFields != null ? r.unneededFields : '',
+        r.trustScore != null ? r.trustScore : '',
+        r.surveyAnswers ? r.surveyAnswers[0] : '',
+        r.surveyAnswers ? r.surveyAnswers[1] : '',
+        r.surveyAnswers ? r.surveyAnswers[2] : '',
+        r.surveyAnswers ? r.surveyAnswers[3] : '',
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`));
+
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `scholarship_study_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ─────────────────────────────────────────────
+    //  EVENT LISTENERS
+    // ─────────────────────────────────────────────
+    document.getElementById('refreshBtn').addEventListener('click', render);
+
+    document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete ALL participant data? This cannot be undone.')) {
+        clearAllRecords(); // from script.js
+        render();          // re-render (will show no-data state)
+      }
+    });
+
+    // ── Initial render on page load ──
+    render();
+
+    // Animate bars after a short delay (allows CSS transitions to fire)
+    // A small trick: setting widths before transition registers means bars animate in
+    setTimeout(() => { render(); }, 100);
+  </script>
+
+</body>
+</html>
