@@ -205,6 +205,15 @@
     //  RESULTS PAGE LOGIC
     // ══════════════════════════════════════════════
 
+    // Normalize the form type values used across the app.
+    // Sessions are stored as 'progressive'/'conventional', but some older or
+    // manually generated records may use 'A'/'B'.
+    function normalizeFormType(value) {
+      if (value === 'A' || value === 'progressive') return 'A';
+      if (value === 'B' || value === 'conventional') return 'B';
+      return value;
+    }
+
     // ── DOM references ──
     const noDataEl       = document.getElementById('noDataState');
     const resultsEl      = document.getElementById('resultsContent');
@@ -230,8 +239,8 @@
       resultsEl.classList.remove('hidden');
 
       // Split records into Form A and Form B groups
-      const aRecs = records.filter(r => r.formType === 'A');
-      const bRecs = records.filter(r => r.formType === 'B');
+      const aRecs = records.filter(r => normalizeFormType(r.formType) === 'A');
+      const bRecs = records.filter(r => normalizeFormType(r.formType) === 'B');
 
       // ── Compute statistics for each group ──
       const stats = {
@@ -276,8 +285,8 @@
      */
     function renderMetricCards(records, stats) {
       const total = records.length;
-      const aCount = records.filter(r => r.formType === 'A').length;
-      const bCount = records.filter(r => r.formType === 'B').length;
+      const aCount = records.filter(r => normalizeFormType(r.formType) === 'A').length;
+      const bCount = records.filter(r => normalizeFormType(r.formType) === 'B').length;
       const overallCompletion = records.filter(r => r.completed).length;
       const withTrust = records.filter(r => r.trustScore != null);
       const overallTrust = withTrust.length
@@ -371,7 +380,8 @@
       if (!records.length) { rawTableBody.innerHTML = ''; return; }
 
       rawTableBody.innerHTML = records.map((r, i) => {
-        const formBadge = r.formType === 'A'
+        const formType = normalizeFormType(r.formType);
+        const formBadge = formType === 'A'
           ? '<span class="badge-a">Form A</span>'
           : '<span class="badge-b">Form B</span>';
         const compBadge = r.completed
