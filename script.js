@@ -161,6 +161,7 @@ function abandonSession(lastStep) {
   session.lastStepReached = lastStep;
 
   saveRecord(session);
+  submitToNetlify(session); // also report drop-offs so the dashboard's completion rate is real
   localStorage.removeItem(SESSION_KEY);
 }
 
