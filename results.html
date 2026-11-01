@@ -40,6 +40,7 @@
       <span class="badge">Researcher Dashboard</span>
       <h1>Research Results</h1>
       <p>Comparing Form A (Progressive Disclosure) vs Form B (Conventional) across all recorded participants.</p>
+      <p id="sourceNote" style="font-size:0.85rem; margin-top:0.5rem;">Loading results…</p>
     </div>
 
     <!-- ── Action Buttons ── -->
@@ -185,7 +186,7 @@
                 <th>Trust Score</th>
                 <th>Survey (Q1–Q4)</th>
                 <th>Last Step</th>
-                <th>Started</th>
+                <th>Submitted</th>
               </tr>
             </thead>
             <tbody id="rawTableBody">
@@ -222,12 +223,52 @@
     const rawTableBody   = document.getElementById('rawTableBody');
     const totalCountEl   = document.getElementById('totalCount');
 
+    const sourceNoteEl = document.getElementById('sourceNote');
+
+    // Records currently on screen, and where they came from ('server' | 'local')
+    let currentRecords = [];
+    let currentSource  = 'local';
+
+    /**
+     * Load results. First choice: the Netlify function, which returns survey
+     * results from EVERY participant on every device. If that is unavailable
+     * (e.g. running locally, or not set up yet) fall back to this browser's
+     * localStorage so the page still works.
+     */
+    async function loadRecords() {
+      try {
+        const res = await fetch('/.netlify/functions/results', { cache: 'no-store' });
+        if (!res.ok) {
+          let detail = 'HTTP ' + res.status;
+          try { detail = (await res.json()).error || detail; } catch (e) {}
+          throw new Error(detail);
+        }
+        const data = await res.json();
+        currentRecords = data.records || [];
+        currentSource  = 'server';
+        sourceNoteEl.textContent =
+          '✅ Live results from all participants (Netlify) — ' + currentRecords.length + ' recorded.';
+      } catch (err) {
+        console.warn('Server results unavailable, using this browser only:', err.message);
+        currentRecords = loadAllRecords(); // from script.js
+        currentSource  = 'local';
+        sourceNoteEl.textContent =
+          '⚠️ Showing only data saved in THIS browser (server results unavailable: ' + err.message + ').';
+      }
+    }
+
+    /** Fetch fresh data, then draw it. */
+    async function refresh() {
+      await loadRecords();
+      render();
+    }
+
     /**
      * Main render function.
-     * Loads all records from localStorage and populates every section of the page.
+     * Draws every section of the page from currentRecords.
      */
     function render() {
-      const records = loadAllRecords(); // from script.js
+      const records = currentRecords;
 
       if (!records.length) {
         noDataEl.classList.remove('hidden');
@@ -419,7 +460,7 @@
      * Build a CSV string from all records and trigger a browser download.
      */
     function downloadCSV() {
-      const records = loadAllRecords();
+      const records = currentRecords;
       if (!records.length) { alert('No data to download yet.'); return; }
 
       const headers = [
@@ -459,23 +500,27 @@
     // ─────────────────────────────────────────────
     //  EVENT LISTENERS
     // ─────────────────────────────────────────────
-    document.getElementById('refreshBtn').addEventListener('click', render);
+    document.getElementById('refreshBtn').addEventListener('click', refresh);
 
     document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
 
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      if (confirm('Are you sure you want to delete ALL participant data? This cannot be undone.')) {
+    document.getElementById('clearBtn').addEventListener('click', async () => {
+      if (currentSource === 'server') {
+        alert('These results are stored on Netlify, so they cannot be cleared from this page.\n\nTo delete them: Netlify dashboard → Forms → study-results → delete submissions.\n\n(This button only clears data saved in this browser.)');
+        return;
+      }
+      if (confirm('Are you sure you want to delete ALL participant data saved in this browser? This cannot be undone.')) {
         clearAllRecords(); // from script.js
-        render();          // re-render (will show no-data state)
+        await refresh();   // re-render (will show no-data state)
       }
     });
 
-    // ── Initial render on page load ──
-    render();
+    // ── Initial load + render ──
+    refresh();
 
     // Animate bars after a short delay (allows CSS transitions to fire)
-    // A small trick: setting widths before transition registers means bars animate in
-    setTimeout(() => { render(); }, 100);
+    // Re-render from the data already loaded (no second network call)
+    setTimeout(() => { render(); }, 600);
   </script>
 
 </body>
