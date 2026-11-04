@@ -407,7 +407,7 @@
         progressCont.classList.add('hidden'); // hide progress for ineligible
 
         // Record as abandoned (did not complete) at step 2
-        abandonSession(2);
+        markIneligibleSession(2);
 
       } else if (isNeed) {
         // Need-based + eligible — ask income & occupation

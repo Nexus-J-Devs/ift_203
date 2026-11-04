@@ -41,6 +41,7 @@
       <h1>Research Results</h1>
       <p>Comparing Form A (Progressive Disclosure) vs Form B (Conventional) across all recorded participants.</p>
       <p id="sourceNote" style="font-size:0.85rem; margin-top:0.5rem;">Loading results…</p>
+      <p style="font-size:0.82rem; color:var(--clr-neutral-500); margin-top:0.35rem;">A session is marked abandoned if it has not completed within 30 minutes of starting. Sessions inside that window remain in progress.</p>
     </div>
 
     <!-- ── Action Buttons ── -->
@@ -56,7 +57,7 @@
     <div id="noDataState" class="card no-data hidden">
       <div class="no-data-icon">📭</div>
       <h2 style="margin-bottom:0.5rem; color:var(--clr-neutral-900);">No Participant Data Yet</h2>
-      <p>Ask participants to go through <a href="index.html">the study flow</a> first.<br>Data will appear here once at least one form is completed.</p>
+      <p>Ask participants to go through <a href="index.html">the study flow</a> first.<br>Data will appear here as soon as a participant consents and starts a form.</p>
     </div>
 
     <!-- ══════════════════════════════════════════
@@ -179,7 +180,7 @@
               <tr>
                 <th>#</th>
                 <th>Form</th>
-                <th>Completed</th>
+                <th>Status</th>
                 <th>Time (s)</th>
                 <th>Fields Asked</th>
                 <th>Unneeded</th>
@@ -303,17 +304,25 @@
      * @returns {Object} Statistics object
      */
     function computeStats(recs) {
-      if (!recs.length) return { n: 0, completionRate: null, avgTime: null, avgTrust: null, avgUnneeded: null };
+      if (!recs.length) return { n: 0, completed: 0, abandoned: 0, inProgress: 0, ineligible: 0, completionRate: null, avgTime: null, avgTrust: null, avgUnneeded: null };
 
-      const completed    = recs.filter(r => r.completed);
-      const completionRate = (completed.length / recs.length) * 100;
+      const completed = recs.filter(r => r.completed || r.status === 'completed').length;
+      const abandoned = recs.filter(r => r.status === 'abandoned' || r.abandoned).length;
+      const inProgress = recs.filter(r => r.status === 'in_progress' || r.inProgress).length;
+      const ineligible = recs.filter(r => r.status === 'ineligible').length;
+      const completionRate = (completed / recs.length) * 100;
 
-      const times      = recs.filter(r => r.totalSeconds != null).map(r => r.totalSeconds);
-      const trusts     = recs.filter(r => r.trustScore   != null).map(r => r.trustScore);
-      const unneeded   = recs.filter(r => r.unneededFields != null).map(r => r.unneededFields);
+      const completedRecords = recs.filter(r => r.completed || r.status === 'completed');
+      const times      = completedRecords.filter(r => r.totalSeconds != null).map(r => r.totalSeconds);
+      const trusts     = completedRecords.filter(r => r.trustScore != null).map(r => r.trustScore);
+      const unneeded   = completedRecords.filter(r => r.unneededFields != null).map(r => r.unneededFields);
 
       return {
         n:              recs.length,
+        completed,
+        abandoned,
+        inProgress,
+        ineligible,
         completionRate: completionRate,
         avgTime:        mean(times),       // from script.js
         avgTrust:       mean(trusts),
@@ -328,7 +337,9 @@
       const total = records.length;
       const aCount = records.filter(r => normalizeFormType(r.formType) === 'A').length;
       const bCount = records.filter(r => normalizeFormType(r.formType) === 'B').length;
-      const overallCompletion = records.filter(r => r.completed).length;
+      const overallCompletion = records.filter(r => r.completed || r.status === 'completed').length;
+      const overallAbandoned = records.filter(r => r.status === 'abandoned' || r.abandoned).length;
+      const overallInProgress = records.filter(r => r.status === 'in_progress' || r.inProgress).length;
       const withTrust = records.filter(r => r.trustScore != null);
       const overallTrust = withTrust.length
         ? mean(withTrust.map(r => r.trustScore))
@@ -345,7 +356,15 @@
         </div>
         <div class="metric-card">
           <div class="metric-label">Overall Completion</div>
-          <div class="metric-value">${overallCompletion} / ${total}</div>
+          <div class="metric-value">${overallCompletion} / ${total} (${total ? Math.round(overallCompletion / total * 100) : 0}%)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Abandoned</div>
+          <div class="metric-value">${overallAbandoned}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">In Progress</div>
+          <div class="metric-value">${overallInProgress}</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Avg Trust Score</div>
@@ -361,7 +380,11 @@
       const fmt = (val, suffix='') => val != null ? round(val, 1) + suffix : '—';
 
       const rows = [
-        ['Participants',             `${stats.A.n}`, `${stats.B.n}`],
+        ['Started',                  `${stats.A.n}`, `${stats.B.n}`],
+        ['Completed',                `${stats.A.completed}`, `${stats.B.completed}`],
+        ['Abandoned',                `${stats.A.abandoned}`, `${stats.B.abandoned}`],
+        ['Still In Progress',        `${stats.A.inProgress}`, `${stats.B.inProgress}`],
+        ['Ineligible',               `${stats.A.ineligible}`, `${stats.B.ineligible}`],
         ['Completion Rate',          fmt(stats.A.completionRate, '%'), fmt(stats.B.completionRate, '%')],
         ['Average Time',             stats.A.avgTime != null ? formatDuration(Math.round(stats.A.avgTime)) : '—',
                                      stats.B.avgTime != null ? formatDuration(Math.round(stats.B.avgTime)) : '—'],
@@ -425,9 +448,15 @@
         const formBadge = formType === 'A'
           ? '<span class="badge-a">Form A</span>'
           : '<span class="badge-b">Form B</span>';
-        const compBadge = r.completed
-          ? '<span class="badge-done">✓ Done</span>'
-          : '<span class="badge-drop">✗ Drop</span>';
+        const status = r.status || (r.completed ? 'completed' : 'abandoned');
+        const statusLabels = { completed: '✓ Completed', abandoned: '✗ Abandoned', in_progress: '… In progress', ineligible: 'Not eligible' };
+        const compBadge = status === 'completed'
+          ? `<span class="badge-done">${statusLabels[status]}</span>`
+          : status === 'in_progress'
+            ? `<span class="badge-a">${statusLabels[status]}</span>`
+            : status === 'ineligible'
+              ? `<span class="badge-b">${statusLabels[status]}</span>`
+              : `<span class="badge-drop">${statusLabels[status] || status}</span>`;
         const surveys = r.surveyAnswers
           ? r.surveyAnswers.join(', ')
           : '—';
@@ -465,7 +494,7 @@
 
       const headers = [
         'sessionId', 'formType', 'startTime', 'endTime', 'totalSeconds',
-        'completed', 'lastStepReached', 'fieldsAsked', 'unneededFields',
+        'completed', 'status', 'lastStepReached', 'fieldsAsked', 'unneededFields',
         'trustScore', 'q1', 'q2', 'q3', 'q4',
       ];
 
@@ -476,6 +505,7 @@
         r.endTime    || '',
         r.totalSeconds != null ? r.totalSeconds : '',
         r.completed ? 'TRUE' : 'FALSE',
+        r.status || (r.completed ? 'completed' : 'abandoned'),
         r.lastStepReached != null ? r.lastStepReached : '',
         r.fieldsAsked != null ? r.fieldsAsked : '',
         r.unneededFields != null ? r.unneededFields : '',

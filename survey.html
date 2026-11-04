@@ -17,6 +17,10 @@
   -->
   <form name="study-results" data-netlify="true" hidden>
     <input type="hidden" name="form-name"      value="study-results" />
+    <input type="hidden" name="eventType" />
+    <input type="hidden" name="startTime" />
+    <input type="hidden" name="endTime" />
+    <input type="hidden" name="lastStepReached" />
     <input type="hidden" name="sessionId" />
     <input type="hidden" name="formType" />
     <input type="hidden" name="totalSeconds" />
@@ -229,7 +233,7 @@
 
       // ── Submit anonymous results to Netlify Forms (fails silently when local) ──
       if (updatedRecord) {
-        submitToNetlify(updatedRecord); // defined in script.js
+        submitToNetlify(updatedRecord, 'survey'); // attach survey answers to the same participant session
       }
 
       // ── Show thank-you, hide the form ──

@@ -84,6 +84,7 @@ function createSession(formType) {
     endTime:         null,
     totalSeconds:    null,
     completed:       false,
+    status:          'in_progress',
     lastStepReached: 1,                 // step number (1–3 for progressive, 1 for conventional)
     fieldsAsked:     0,                 // count of fields actually shown
     unneededFields:  0,                 // count of fields that were unnecessary
@@ -92,6 +93,7 @@ function createSession(formType) {
     formData:        {},                // non-sensitive metadata (scholarship type, level, cgpa)
   };
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  submitToNetlify(session, 'started'); // record the denominator as soon as the form begins
   return session;
 }
 
@@ -133,12 +135,14 @@ function finalizeSession(extraData = {}) {
     (new Date(session.endTime) - new Date(session.startTime)) / 1000
   );
   session.completed    = true;
+  session.status       = 'completed';
 
   // Merge any extra data passed in
   Object.assign(session, extraData);
 
   // Persist to the all-records array, then remove the current session key
   saveRecord(session);
+  submitToNetlify(session, 'completed'); // record completion even if the survey is skipped
   localStorage.removeItem(SESSION_KEY);
 
   return session;
@@ -149,7 +153,7 @@ function finalizeSession(extraData = {}) {
  * Saves it to the full records array so we can track drop-offs.
  * @param {number} lastStep - The last step the participant reached
  */
-function abandonSession(lastStep) {
+function markIneligibleSession(lastStep) {
   const session = loadSession();
   if (!session) return;
 
@@ -158,10 +162,11 @@ function abandonSession(lastStep) {
     (new Date(session.endTime) - new Date(session.startTime)) / 1000
   );
   session.completed       = false;
+  session.status          = 'ineligible';
   session.lastStepReached = lastStep;
 
   saveRecord(session);
-  submitToNetlify(session); // also report drop-offs so the dashboard's completion rate is real
+  submitToNetlify(session, 'ineligible');
   localStorage.removeItem(SESSION_KEY);
 }
 
@@ -185,10 +190,14 @@ function abandonSession(lastStep) {
  *
  * @param {Object} record - The finalised participant session record
  */
-function submitToNetlify(record) {
+function submitToNetlify(record, eventType = 'survey') {
   // Build a URL-encoded form body (required by Netlify Forms)
   const body = new URLSearchParams({
     'form-name':    'study-results',           // must match the name= on the HTML form
+    eventType:      eventType,
+    startTime:      record.startTime || '',
+    endTime:        record.endTime || '',
+    lastStepReached: record.lastStepReached != null ? record.lastStepReached : '',
     sessionId:      record.sessionId   || '',
     formType:       record.formType    || '',
     totalSeconds:   record.totalSeconds != null ? record.totalSeconds : '',
