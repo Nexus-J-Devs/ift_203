@@ -149,8 +149,8 @@ function finalizeSession(extraData = {}) {
 }
 
 /**
- * Mark the current session as abandoned (not completed).
- * Saves it to the full records array so we can track drop-offs.
+ * Mark a session as ineligible, not abandoned.
+ * This is used when the eligibility rules intentionally stop the application.
  * @param {number} lastStep - The last step the participant reached
  */
 function markIneligibleSession(lastStep) {
@@ -176,9 +176,8 @@ function markIneligibleSession(lastStep) {
 // ─────────────────────────────────────────────
 
 /**
- * Submit anonymous results to Netlify Forms when the survey is completed.
- * Only sends: sessionId, formType, totalSeconds, completed, fieldsAsked,
- * unneededFields, trustScore, and individual survey answers.
+ * Submit anonymous lifecycle and research events to Netlify Forms.
+ * Sends session metadata, completion metrics, and (when available) survey answers.
  * Nothing typed into the scholarship form fields is ever sent.
  *
  * This uses the Netlify Forms hidden-form technique: a real <form> element

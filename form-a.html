@@ -406,7 +406,7 @@
         ineligibleMsg.classList.remove('hidden');
         progressCont.classList.add('hidden'); // hide progress for ineligible
 
-        // Record as abandoned (did not complete) at step 2
+        // Record as ineligible; this is not an abandoned session
         markIneligibleSession(2);
 
       } else if (isNeed) {
