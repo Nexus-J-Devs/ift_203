@@ -114,15 +114,14 @@ You'll get a permanent URL you can share with participants.
 
 ## ✅ Quick Test Checklist
 
-- [ ] Landing page shows, consent required before proceeding
-- [ ] "Start" button sends to Form A or B randomly
-- [ ] Form A: step 1 validates before moving on
-- [ ] Form A: CGPA < 3.0 shows ineligible message
-- [ ] Form A: Need-based shows income & occupation fields
-- [ ] Form A: Merit-based + eligible skips those fields
-- [ ] Form B: all 12 fields visible, bank account shown
-- [ ] Both forms redirect to survey on submit
-- [ ] Survey saves trust score
-- [ ] Results page shows charts and table
-- [ ] CSV download works
-- [ ] Clear data button resets everything
+- [x] Landing page shows, consent required before proceeding
+- [x] "Start" button sends to Form A or B randomly
+- [x] Form A: step 1 validates before moving on
+- [x] Form A: CGPA < 3.0 shows ineligible message
+- [x] Form A: Need-based shows income & occupation fields
+- [x] Form A: Merit-based + eligible skips those fields
+- [x] Form B: all 12 fields visible, bank account shown
+- [x] Both forms redirect to survey on submit
+- [x] Survey saves trust score
+- [x] Results page shows charts and table
+- [x] CSV download works
