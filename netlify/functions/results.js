@@ -1,8 +1,8 @@
 /**
  * netlify/functions/results.js
  *
- * Returns ALL survey results (from every participant, every device) so that
- * results.html can show them. It reads the "study-results" form submissions
+ * Returns ALL participant lifecycle results (from every participant, every device) so that
+ * results.html can show them. It merges the "study-results" form submissions
  * from the Netlify API using a token kept on the server (never in the browser).
  *
  * Required environment variables (Netlify → Site configuration → Environment variables):
@@ -29,24 +29,69 @@ function respond(statusCode, body) {
 
 const num = v => (v === '' || v == null || isNaN(Number(v)) ? null : Number(v));
 
-/** Convert one Netlify submission into the record shape results.html expects. */
-function toRecord(sub) {
-  const d = sub.data || {};
-  const answers = [d.q1, d.q2, d.q3, d.q4].map(num);
-  const hasSurvey = answers.every(a => a !== null);
+/** Merge multiple anonymous lifecycle events into one participant record. */
+function mergeSubmissions(submissions) {
+  const bySession = new Map();
+  submissions
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    .forEach(sub => {
+      const d = sub.data || {};
+      const id = d.sessionId || sub.id;
+      const eventType = d.eventType || (String(d.completed) === 'true' ? 'completed' : 'legacy');
+      const rec = bySession.get(id) || {
+        sessionId: id, formType: d.formType || '', startTime: d.startTime || sub.created_at || null,
+        endTime: null, totalSeconds: null, completed: false, status: 'in_progress',
+        fieldsAsked: null, unneededFields: null, trustScore: null, surveyAnswers: null,
+        lastStepReached: null,
+      };
 
-  return {
-    sessionId:       d.sessionId || sub.id,
-    formType:        d.formType || '',
-    startTime:       sub.created_at || null, // time the result was submitted
-    totalSeconds:    num(d.totalSeconds),
-    completed:       String(d.completed) === 'true',
-    fieldsAsked:     num(d.fieldsAsked),
-    unneededFields:  num(d.unneededFields),
-    trustScore:      num(d.trustScore),
-    surveyAnswers:   hasSurvey ? answers : null,
-    lastStepReached: null,
-  };
+      // Preserve the original start timestamp across all later events.
+      if (!rec.startTime) rec.startTime = d.startTime || sub.created_at || null;
+      if (d.formType) rec.formType = d.formType;
+      if (eventType === 'started') {
+        rec.status = 'in_progress';
+      } else if (eventType === 'completed' || eventType === 'survey' || eventType === 'legacy') {
+        if (String(d.completed) === 'true' || eventType === 'completed' || eventType === 'survey') {
+          rec.completed = true;
+          rec.status = 'completed';
+          rec.endTime = d.endTime || sub.created_at || rec.endTime;
+        } else if (eventType === 'legacy') {
+          // Older false records were explicitly submitted as non-completions.
+          rec.status = 'abandoned';
+          rec.endTime = sub.created_at || rec.endTime;
+        }
+      } else if (eventType === 'ineligible') {
+        rec.status = 'ineligible';
+        rec.endTime = d.endTime || sub.created_at || rec.endTime;
+      }
+
+      const seconds = num(d.totalSeconds);
+      const fields = num(d.fieldsAsked);
+      const unneeded = num(d.unneededFields);
+      const trust = num(d.trustScore);
+      const step = num(d.lastStepReached);
+      if (seconds !== null) rec.totalSeconds = seconds;
+      if (fields !== null) rec.fieldsAsked = fields;
+      if (unneeded !== null) rec.unneededFields = unneeded;
+      if (trust !== null) rec.trustScore = trust;
+      if (step !== null) rec.lastStepReached = step;
+
+      const answers = [d.q1, d.q2, d.q3, d.q4].map(num);
+      if (answers.every(a => a !== null)) rec.surveyAnswers = answers;
+      bySession.set(id, rec);
+    });
+
+  const now = Date.now();
+  const abandonmentMs = 30 * 60 * 1000;
+  return Array.from(bySession.values()).map(rec => {
+    if (!rec.completed && rec.status !== 'ineligible') {
+      const age = rec.startTime ? now - new Date(rec.startTime).getTime() : 0;
+      rec.status = age >= abandonmentMs ? 'abandoned' : 'in_progress';
+    }
+    rec.abandoned = rec.status === 'abandoned';
+    rec.inProgress = rec.status === 'in_progress';
+    return rec;
+  });
 }
 
 exports.handler = async () => {
@@ -86,16 +131,8 @@ exports.handler = async () => {
       if (batch.length < 100) break;
     }
 
-    // 3) Convert, drop duplicates by sessionId (keep newest), sort oldest → newest
-    const bySession = new Map();
-    all
-      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-      .forEach(sub => {
-        const rec = toRecord(sub);
-        bySession.set(rec.sessionId, rec); // later submissions overwrite earlier
-      });
-
-    return respond(200, { records: Array.from(bySession.values()) });
+    // 3) Merge start/completion/survey events into one record per session.
+    return respond(200, { records: mergeSubmissions(all) });
   } catch (err) {
     return respond(500, { error: 'Could not reach Netlify API: ' + err.message });
   }
