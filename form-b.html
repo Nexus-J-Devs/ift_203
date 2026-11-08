@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scholarship Application — Conventional Form</title>
-  <meta name="description" content="Conventional all-in-one scholarship application form for a research study." />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Conventional all-in-one scholarship application form for a research study.">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -39,25 +39,25 @@
       <!-- Field 1: Full Name -->
       <div class="form-group">
         <label for="fb-name">Full Name <span class="required">*</span></label>
-        <input type="text" id="fb-name" class="form-control" placeholder="e.g. Ada Okafor" autocomplete="off" />
+        <input type="text" id="fb-name" class="form-control" placeholder="e.g. Ada Okafor" autocomplete="off">
         <span class="field-error" id="err-fb-name"></span>
       </div>
 
       <!-- Field 2: Email -->
       <div class="form-group">
         <label for="fb-email">Email Address <span class="required">*</span></label>
-        <input type="email" id="fb-email" class="form-control" placeholder="you@example.com" autocomplete="off" />
+        <input type="email" id="fb-email" class="form-control" placeholder="you@example.com" autocomplete="off">
         <span class="field-error" id="err-fb-email"></span>
       </div>
 
       <!-- Field 3: Phone -->
       <div class="form-group">
         <label for="fb-phone">Phone Number <span class="required">*</span></label>
-        <input type="tel" id="fb-phone" class="form-control" placeholder="e.g. +234 801 234 5678" autocomplete="off" />
+        <input type="tel" id="fb-phone" class="form-control" placeholder="e.g. +234 801 234 5678" autocomplete="off">
         <span class="field-error" id="err-fb-phone"></span>
       </div>
 
-      <hr class="divider" />
+      <hr class="divider">
 
       <!-- ── SECTION 2: Academic Information ── -->
       <h2 class="section-title">Academic Information</h2>
@@ -65,7 +65,7 @@
       <!-- Field 4: University & Course -->
       <div class="form-group">
         <label for="fb-university">University and Course <span class="required">*</span></label>
-        <input type="text" id="fb-university" class="form-control" placeholder="e.g. University of Lagos — Computer Science" autocomplete="off" />
+        <input type="text" id="fb-university" class="form-control" placeholder="e.g. University of Lagos — Computer Science" autocomplete="off">
         <span class="field-error" id="err-fb-university"></span>
       </div>
 
@@ -86,11 +86,11 @@
       <!-- Field 6: CGPA -->
       <div class="form-group">
         <label for="fb-cgpa">CGPA <span class="required">*</span> <span class="hint">(0.00 – 5.00)</span></label>
-        <input type="number" id="fb-cgpa" class="form-control" placeholder="e.g. 3.75" min="0" max="5" step="0.01" autocomplete="off" />
+        <input type="number" id="fb-cgpa" class="form-control" placeholder="e.g. 3.75" min="0" max="5" step="0.01" autocomplete="off">
         <span class="field-error" id="err-fb-cgpa"></span>
       </div>
 
-      <hr class="divider" />
+      <hr class="divider">
 
       <!-- ── SECTION 3: Scholarship Details ── -->
       <h2 class="section-title">Scholarship Details</h2>
@@ -100,11 +100,11 @@
         <label>Scholarship Type <span class="required">*</span></label>
         <div class="radio-group radio-group--inline" id="fb-schType">
           <label class="radio-option">
-            <input type="radio" name="fb-scholarshipType" value="merit" />
+            <input type="radio" name="fb-scholarshipType" value="merit">
             🏆 Merit-based
           </label>
           <label class="radio-option">
-            <input type="radio" name="fb-scholarshipType" value="need" />
+            <input type="radio" name="fb-scholarshipType" value="need">
             🤝 Need-based
           </label>
         </div>
@@ -133,7 +133,7 @@
           Parent / Guardian Occupation <span class="required">*</span>
           <span class="hint">(required for Need-based)</span>
         </label>
-        <input type="text" id="fb-occupation" class="form-control" placeholder="e.g. Farmer, Civil Servant, Self-employed" autocomplete="off" />
+        <input type="text" id="fb-occupation" class="form-control" placeholder="e.g. Farmer, Civil Servant, Self-employed" autocomplete="off">
         <span class="field-error" id="err-fb-occupation"></span>
       </div>
 
@@ -145,7 +145,7 @@
         <span class="field-error" id="err-fb-reason"></span>
       </div>
 
-      <hr class="divider" />
+      <hr class="divider">
 
       <!-- ── SECTION 4: Referee ── -->
       <h2 class="section-title">Referee Details <span style="font-weight:400;font-size:0.8em;color:var(--clr-neutral-500)">(required if CGPA ≥ 3.0)</span></h2>
@@ -153,18 +153,18 @@
       <!-- Field 11a: Referee Name -->
       <div class="form-group">
         <label for="fb-refName">Referee Full Name <span class="required">*</span></label>
-        <input type="text" id="fb-refName" class="form-control" placeholder="e.g. Prof. James Adeyemi" autocomplete="off" />
+        <input type="text" id="fb-refName" class="form-control" placeholder="e.g. Prof. James Adeyemi" autocomplete="off">
         <span class="field-error" id="err-fb-refName"></span>
       </div>
 
       <!-- Field 11b: Referee Email -->
       <div class="form-group">
         <label for="fb-refEmail">Referee Email Address <span class="required">*</span></label>
-        <input type="email" id="fb-refEmail" class="form-control" placeholder="referee@university.edu" autocomplete="off" />
+        <input type="email" id="fb-refEmail" class="form-control" placeholder="referee@university.edu" autocomplete="off">
         <span class="field-error" id="err-fb-refEmail"></span>
       </div>
 
-      <hr class="divider" />
+      <hr class="divider">
 
       <!-- ── SECTION 5: Bank Account (extra/unnecessary field) ── -->
       <h2 class="section-title">Payment Details <span style="font-weight:400;font-size:0.8em;color:var(--clr-neutral-500)">(for approved awards only)</span></h2>
@@ -179,7 +179,7 @@
       <!-- Field 12: Bank Account Number -->
       <div class="form-group">
         <label for="fb-bank">Bank Account Number <span class="required">*</span> <span class="hint">10 digits</span></label>
-        <input type="text" id="fb-bank" class="form-control" placeholder="e.g. 0123456789" maxlength="10" autocomplete="off" />
+        <input type="text" id="fb-bank" class="form-control" placeholder="e.g. 0123456789" maxlength="10" autocomplete="off">
         <span class="field-error" id="err-fb-bank"></span>
       </div>
 

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Consent — Scholarship Form Study</title>
-  <meta name="description" content="Participant consent page for the IFT 203 scholarship form research study." />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Participant consent page for the IFT 203 scholarship form research study.">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -24,7 +24,7 @@
       <div class="alert alert--info" style="margin-bottom:1.5rem;">
         <span class="alert-icon">ℹ️</span>
         <div class="alert-content">
-          <h4>Participant Information</h4>
+          <div class="alert-title">Participant Information</div>
           <p>
             This is an academic research exercise for IFT 203. You have chosen to try a form version and we will record:
           </p>
@@ -44,13 +44,13 @@
 
       <!-- Consent checkbox -->
       <label class="consent-block" id="consentLabel">
-        <input type="checkbox" id="consentCheck" />
-        <p>
+        <input type="checkbox" id="consentCheck">
+        <span class="consent-text">
           I understand this is a research exercise. I agree to participate.
           I will <strong>not enter real personal information</strong> in the form.
           I understand that only anonymous results (form type, time taken, and survey scores)
           are sent to the researcher — nothing I type into the form fields is collected.
-        </p>
+        </span>
       </label>
 
       <!-- Error shown if they click Continue without ticking -->
