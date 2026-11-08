@@ -173,21 +173,10 @@
 
   <script src="script.js"></script>
   <script>
-    // ══════════════════════════════════════════════
-    //  SURVEY PAGE LOGIC
-    // ══════════════════════════════════════════════
-
     const surveyForm    = document.getElementById('surveyForm');
     const thankYouState = document.getElementById('thankYouState');
 
-    /**
-     * Validate that a radio group question has been answered.
-     * Returns the selected integer value, or null if unanswered.
-     * Also shows/hides the associated .field-error element.
-     *
-     * @param {string} name - radio input name (e.g. 'q1')
-     * @returns {number|null}
-     */
+    /** Validate that a radio group question has been answered. */
     function getScaleValue(name) {
       const checked = document.querySelector(`input[name="${name}"]:checked`);
       const errEl   = document.getElementById(`err-${name}`);
@@ -204,14 +193,10 @@
 
     surveyForm.addEventListener('submit', e => {
       e.preventDefault();
-
-      // Collect and validate all four answers
       const q1 = getScaleValue('q1');
       const q2 = getScaleValue('q2');
       const q3 = getScaleValue('q3');
       const q4 = getScaleValue('q4');
-
-      // Stop if any question unanswered
       if (q1 === null || q2 === null || q3 === null || q4 === null) return;
 
       // Calculate the average trust score (1 – 5 scale)

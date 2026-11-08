@@ -203,10 +203,6 @@
 
   <script src="script.js"></script>
   <script>
-    // ══════════════════════════════════════════════
-    //  FORM B (CONVENTIONAL) — Logic
-    // ══════════════════════════════════════════════
-
     // Guard: redirect to welcome if:
     //  a) no active session exists, OR
     //  b) session is not for the conventional form, OR
@@ -238,10 +234,7 @@
     reasonEl.addEventListener('input', () => {
       updateWordCount(reasonEl, reasonCnt, 150);
     });
-
-    // ─────────────────────────────────────────────
     //  SUBMIT HANDLER
-    // ─────────────────────────────────────────────
     submitBtn.addEventListener('click', () => {
       const cgpa    = parseFloat(cgpaEl.value);
       const schType = document.querySelector('input[name="fb-scholarshipType"]:checked')?.value;
@@ -277,7 +270,6 @@
 
       const allValid = results.every(Boolean);
       if (!allValid) {
-        // Scroll to first invalid field
         const firstInvalid = formCard.querySelector('.is-invalid');
         if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
@@ -310,17 +302,13 @@
       });
 
       // ── Show success, hide form content ──
-      // Hide all children of the card except the success div
       Array.from(formCard.children).forEach(child => {
         if (child.id !== 'fbSuccess') child.classList.add('hidden');
       });
       successDiv.classList.remove('hidden');
       scrollToTop();
     });
-
-    // ─────────────────────────────────────────────
     //  HELPER: clear error state from an optional field
-    // ─────────────────────────────────────────────
     function clearFieldError(field) {
       field.classList.remove('is-invalid');
       const err = field.parentElement.querySelector('.field-error');
