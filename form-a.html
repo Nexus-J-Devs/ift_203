@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scholarship Application — Progressive Form</title>
-  <meta name="description" content="Progressive disclosure scholarship application form for a research study." />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Progressive disclosure scholarship application form for a research study.">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -17,6 +17,7 @@
       <span><strong>This is a research test.</strong> Do not enter real personal details.</span>
     </div>
 
+    <h1 class="sr-only">Scholarship Application — Progressive Form</h1>
     <div class="text-center">
       <span class="form-tag form-tag--a">Progressive Form — Step by Step</span>
     </div>
@@ -56,8 +57,7 @@
             id="fa-name"
             class="form-control"
             placeholder="e.g. Ada Okafor"
-            autocomplete="off"
-          />
+            autocomplete="off">
           <span class="field-error" id="err-name"></span>
         </div>
 
@@ -69,8 +69,7 @@
             id="fa-email"
             class="form-control"
             placeholder="you@example.com"
-            autocomplete="off"
-          />
+            autocomplete="off">
           <span class="field-error" id="err-email"></span>
         </div>
 
@@ -82,8 +81,7 @@
             id="fa-university"
             class="form-control"
             placeholder="e.g. University of Lagos — Computer Science"
-            autocomplete="off"
-          />
+            autocomplete="off">
           <span class="field-error" id="err-university"></span>
         </div>
 
@@ -110,8 +108,7 @@
             class="form-control"
             placeholder="e.g. 3.75"
             min="0" max="5" step="0.01"
-            autocomplete="off"
-          />
+            autocomplete="off">
           <span class="field-error" id="err-cgpa"></span>
         </div>
 
@@ -120,11 +117,11 @@
           <label>Scholarship Type <span class="required">*</span></label>
           <div class="radio-group radio-group--inline" id="fa-schType">
             <label class="radio-option">
-              <input type="radio" name="fa-scholarshipType" value="merit" />
+              <input type="radio" name="fa-scholarshipType" value="merit">
               🏆 Merit-based
             </label>
             <label class="radio-option">
-              <input type="radio" name="fa-scholarshipType" value="need" />
+              <input type="radio" name="fa-scholarshipType" value="need">
               🤝 Need-based
             </label>
           </div>
@@ -159,7 +156,7 @@
           <div class="alert alert--info">
             <span class="alert-icon">ℹ️</span>
             <div class="alert-content">
-              <h4>Need-based scholarship selected</h4>
+              <div class="alert-title">Need-based scholarship selected</div>
               <p>Please provide the following financial details to support your application.</p>
             </div>
           </div>
@@ -185,8 +182,7 @@
               id="fa-occupation"
               class="form-control"
               placeholder="e.g. Farmer, Civil Servant, Self-employed"
-              autocomplete="off"
-            />
+              autocomplete="off">
             <span class="field-error" id="err-occupation"></span>
           </div>
 
@@ -201,7 +197,7 @@
           <div class="alert alert--success">
             <span class="alert-icon">✅</span>
             <div class="alert-content">
-              <h4>Great — you qualify for Merit-based consideration!</h4>
+              <div class="alert-title">Great — you qualify for Merit-based consideration!</div>
               <p>No financial details are needed for this scholarship type. Continue to the next step.</p>
             </div>
           </div>
@@ -227,8 +223,7 @@
             id="fa-phone"
             class="form-control"
             placeholder="e.g. +234 801 234 5678"
-            autocomplete="off"
-          />
+            autocomplete="off">
           <span class="field-error" id="err-phone"></span>
         </div>
 
@@ -262,8 +257,7 @@
               id="fa-refName"
               class="form-control"
               placeholder="e.g. Prof. James Adeyemi"
-              autocomplete="off"
-            />
+              autocomplete="off">
             <span class="field-error" id="err-refName"></span>
           </div>
 
@@ -274,8 +268,7 @@
               id="fa-refEmail"
               class="form-control"
               placeholder="referee@university.edu"
-              autocomplete="off"
-            />
+              autocomplete="off">
             <span class="field-error" id="err-refEmail"></span>
           </div>
         </div>

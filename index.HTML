@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scholarship Form Study — Welcome</title>
-  <meta name="description" content="IFT 203 research study comparing two scholarship application form designs. Pick a form to begin." />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="IFT 203 research study comparing two scholarship application form designs. Pick a form to begin.">
+  <link rel="stylesheet" href="style.css">
   <style>
     /* ── Welcome-page specific styles ── */
     .form-choice-grid {
@@ -133,7 +133,7 @@
         </li>
       </ul>
 
-      <hr class="divider" />
+      <hr class="divider">
 
       <!-- ── Form selection ── -->
       <h2 style="font-size:1rem; font-weight:700; color:var(--clr-neutral-700); margin-bottom:0.25rem;">
@@ -144,17 +144,17 @@
       <div class="form-choice-grid">
 
         <!-- Progressive Form -->
-        <div class="form-choice-card form-choice-card--a" id="chooseA" role="button" tabindex="0" aria-label="Start Progressive Form">
+        <div class="form-choice-card form-choice-card--a" id="chooseA">
           <span class="choice-title">Progressive Form</span>
           <p class="choice-desc">Asks for details step by step, only when they are needed.</p>
-          <button class="choice-btn" onclick="go('a')">Start →</button>
+          <button class="choice-btn" onclick="go('a')" aria-label="Start Progressive Form">Start →</button>
         </div>
 
         <!-- Conventional Form -->
-        <div class="form-choice-card form-choice-card--b" id="chooseB" role="button" tabindex="0" aria-label="Start Conventional Form">
+        <div class="form-choice-card form-choice-card--b" id="chooseB">
           <span class="choice-title">Conventional Form</span>
           <p class="choice-desc">Asks for everything on one page, all at once.</p>
-          <button class="choice-btn" onclick="go('b')">Start →</button>
+          <button class="choice-btn" onclick="go('b')" aria-label="Start Conventional Form">Start →</button>
         </div>
 
       </div>
@@ -190,13 +190,7 @@
       window.location.href = 'consent.html';
     }
 
-    // Allow keyboard activation of the whole card too
-    document.getElementById('chooseA').addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') go('a');
-    });
-    document.getElementById('chooseB').addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') go('b');
-    });
+    // Keyboard users activate each card through its own "Start" button.
   </script>
 
 </body>
