@@ -294,10 +294,6 @@
 
   <script src="script.js"></script>
   <script>
-    // ══════════════════════════════════════════════
-    //  FORM A (PROGRESSIVE) — Logic
-    // ══════════════════════════════════════════════
-
     // Guard: redirect to welcome if:
     //  a) no active session exists, OR
     //  b) session is not for the progressive form, OR
@@ -314,23 +310,17 @@
     const step3El       = document.getElementById('step3');
     const successEl     = document.getElementById('successState');
     const progressCont  = document.getElementById('progressContainer');
-
-    // Step 1 fields
     const nameInput   = document.getElementById('fa-name');
     const emailInput  = document.getElementById('fa-email');
     const uniInput    = document.getElementById('fa-university');
     const levelSel    = document.getElementById('fa-level');
     const cgpaInput   = document.getElementById('fa-cgpa');
     const schTypeGrp  = document.getElementById('fa-schType');
-
-    // Step 2 elements
     const ineligibleMsg   = document.getElementById('ineligibleMsg');
     const needBasedFields = document.getElementById('needBasedFields');
     const meritSkipFields = document.getElementById('meritSkipFields');
     const incomeSelect    = document.getElementById('fa-income');
     const occupInput      = document.getElementById('fa-occupation');
-
-    // Step 3 fields
     const phoneInput    = document.getElementById('fa-phone');
     const reasonInput   = document.getElementById('fa-reason');
     const reasonCounter = document.getElementById('fa-reasonCount');
@@ -349,10 +339,7 @@
     reasonInput.addEventListener('input', () => {
       updateWordCount(reasonInput, reasonCounter, 150);
     });
-
-    // ─────────────────────────────────────────────
     //  STEP 1 → STEP 2
-    // ─────────────────────────────────────────────
     document.getElementById('step1Next').addEventListener('click', () => {
       // Validate all step-1 fields
       const ok = [
@@ -413,10 +400,7 @@
         meritSkipFields.classList.remove('hidden');
       }
     });
-
-    // ─────────────────────────────────────────────
     //  STEP 2 (Need) → STEP 3
-    // ─────────────────────────────────────────────
     document.getElementById('step2NextNeed').addEventListener('click', () => {
       const ok = [
         validateField(incomeSelect, Rules.incomeRange),
@@ -432,10 +416,7 @@
 
       goToStep3();
     });
-
-    // ─────────────────────────────────────────────
     //  STEP 2 (Merit) → STEP 3
-    // ─────────────────────────────────────────────
     document.getElementById('step2NextMerit').addEventListener('click', () => {
       const s = loadSession();
       s.fieldsAsked    += 0; // no extra fields for merit in step 2
@@ -445,10 +426,7 @@
 
       goToStep3();
     });
-
-    // ─────────────────────────────────────────────
     //  STEP 3 → SUBMIT
-    // ─────────────────────────────────────────────
     document.getElementById('step3Submit').addEventListener('click', () => {
       const ok = [
         validateField(phoneInput,    Rules.phone),
@@ -479,10 +457,7 @@
       successEl.classList.remove('hidden');
       scrollToTop();
     });
-
-    // ─────────────────────────────────────────────
     //  BACK BUTTONS
-    // ─────────────────────────────────────────────
     document.getElementById('step2BackNeed').addEventListener('click', () => {
       goToStep1();
     });
@@ -499,12 +474,9 @@
       updateProgress(currentStep);
       scrollToTop();
     });
-
-    // ─────────────────────────────────────────────
     //  HELPERS (local to this page)
-    // ─────────────────────────────────────────────
 
-    /** Show step 3, hide step 2 */
+    /** Show step 3, hide step 2. */
     function goToStep3() {
       step2El.classList.add('hidden');
       step3El.classList.remove('hidden');
@@ -513,7 +485,7 @@
       scrollToTop();
     }
 
-    /** Return to step 1 from step 2 */
+    /** Return to step 1 from step 2. */
     function goToStep1() {
       step2El.classList.add('hidden');
       step1El.classList.remove('hidden');
@@ -522,10 +494,7 @@
       scrollToTop();
     }
 
-    /**
-     * Update the shared progress bar and step dots.
-     * For Form A there are always 3 steps.
-     */
+    /** Update the shared progress bar and step dots. */
     function updateProgress(step) {
       setProgress(step, TOTAL_STEPS); // defined in script.js
       const pct = Math.round((step / TOTAL_STEPS) * 100);

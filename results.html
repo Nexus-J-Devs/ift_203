@@ -202,10 +202,6 @@
 
   <script src="script.js"></script>
   <script>
-    // ══════════════════════════════════════════════
-    //  RESULTS PAGE LOGIC
-    // ══════════════════════════════════════════════
-
     // Normalize the form type values used across the app.
     // Sessions are stored as 'progressive'/'conventional', but some older or
     // manually generated records may use 'A'/'B'.
@@ -229,12 +225,7 @@
     let currentRecords = [];
     let currentSource  = 'local';
 
-    /**
-     * Load results. First choice: the Netlify function, which returns survey
-     * results from EVERY participant on every device. If that is unavailable
-     * (e.g. running locally, or not set up yet) fall back to this browser's
-     * localStorage so the page still works.
-     */
+    /** Load results. First choice: the Netlify function, which returns survey. */
     async function loadRecords() {
       try {
         const res = await fetch('/.netlify/functions/results', { cache: 'no-store' });
@@ -263,10 +254,7 @@
       render();
     }
 
-    /**
-     * Main render function.
-     * Draws every section of the page from currentRecords.
-     */
+    /** Main render function. */
     function render() {
       const records = currentRecords;
 
@@ -297,11 +285,7 @@
       totalCountEl.textContent = `(${records.length} participant${records.length !== 1 ? 's' : ''})`;
     }
 
-    /**
-     * Compute aggregate statistics for a group of records.
-     * @param {Array} recs - Array of participant records
-     * @returns {Object} Statistics object
-     */
+    /** Compute aggregate statistics for a group of records. */
     function computeStats(recs) {
       if (!recs.length) return { n: 0, completed: 0, abandoned: 0, inProgress: 0, ineligible: 0, completionRate: null, avgTime: null, avgTrust: null, avgUnneeded: null };
 
@@ -329,9 +313,7 @@
       };
     }
 
-    /**
-     * Render the summary metric cards at the top of the page.
-     */
+    /** Render the summary metric cards at the top of the page. */
     function renderMetricCards(records, stats) {
       const total = records.length;
       const aCount = records.filter(r => normalizeFormType(r.formType) === 'A').length;
@@ -372,9 +354,7 @@
       `;
     }
 
-    /**
-     * Render the comparison table with computed stats.
-     */
+    /** Render the comparison table with computed stats. */
     function renderCompTable(stats, aRecs, bRecs) {
       const fmt = (val, suffix='') => val != null ? round(val, 1) + suffix : '—';
 
@@ -401,10 +381,7 @@
       `).join('');
     }
 
-    /**
-     * Render CSS bar charts.
-     * Each metric is normalised to the max value across both groups to size the bars.
-     */
+    /** Render CSS bar charts. */
     function renderCharts(stats) {
       // Helper: set a bar's width and label
       function setBar(idFill, idVal, value, max, suffix = '') {
@@ -436,9 +413,7 @@
       setBar('bar-unneeded-b', 'val-unneeded-b', stats.B.avgUnneeded, maxUnn, '');
     }
 
-    /**
-     * Render the raw data table showing every participant's record.
-     */
+    /** Render the raw data table showing every participant's record. */
     function renderRawTable(records) {
       if (!records.length) { rawTableBody.innerHTML = ''; return; }
 
@@ -479,14 +454,7 @@
         `;
       }).join('');
     }
-
-    // ─────────────────────────────────────────────
-    //  CSV EXPORT
-    // ─────────────────────────────────────────────
-
-    /**
-     * Build a CSV string from all records and trigger a browser download.
-     */
+    /** Build a CSV string from all records and trigger a browser download. */
     function downloadCSV() {
       const records = currentRecords;
       if (!records.length) { alert('No data to download yet.'); return; }
@@ -525,10 +493,6 @@
       a.click();
       URL.revokeObjectURL(url);
     }
-
-    // ─────────────────────────────────────────────
-    //  EVENT LISTENERS
-    // ─────────────────────────────────────────────
     document.getElementById('refreshBtn').addEventListener('click', refresh);
 
     document.getElementById('downloadBtn').addEventListener('click', downloadCSV);

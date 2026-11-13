@@ -1,17 +1,4 @@
-/**
- * netlify/functions/results.js
- *
- * Returns ALL participant lifecycle results (from every participant, every device) so that
- * results.html can show them. It merges the "study-results" form submissions
- * from the Netlify API using a token kept on the server (never in the browser).
- *
- * Required environment variables (Netlify → Site configuration → Environment variables):
- *   FORMS_TOKEN    — a Netlify personal access token
- *   FORMS_SITE_ID  — this site's Site ID (Site configuration → General → Site ID)
- *
- * Only anonymous study fields are returned. Netlify also stores IP address and
- * user agent with each submission — those are deliberately NOT passed on.
- */
+/** netlify/functions/results.js. */
 
 const API = 'https://api.netlify.com/api/v1';
 const FORM_NAME = 'study-results';

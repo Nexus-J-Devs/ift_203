@@ -175,15 +175,9 @@
   <script src="script.js"></script>
   <script>
     // ── Welcome page logic ──
-    // No random assignment. The tester picks their form.
     // go(type) saves the choice and sends to the consent page.
 
-    /**
-     * Called when the tester clicks a form button.
-     * Stores the intended form type in sessionStorage,
-     * then redirects to the consent page which will forward to the right form.
-     * @param {'a'|'b'} type
-     */
+    /** Called when the tester clicks a form button. */
     function go(type) {
       // Save the pending choice so consent.html knows where to send the tester
       sessionStorage.setItem('pendingForm', type);

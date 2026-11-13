@@ -1,40 +1,13 @@
-/**
- * script.js — Shared logic for the Scholarship Form Research Study
- *
- * This file handles:
- *  - Participant session management (localStorage)
- *  - Tracking helpers (start/stop timer, field counts, step tracking)
- *  - Utility functions used across all pages
- *  - Netlify Forms submission (anonymous results only — no form field data)
- *
- * Participant records are stored in localStorage under "scholarshipStudyData".
- * On survey completion, anonymous results are also posted to Netlify Forms
- * so the researcher can see responses from all devices, not just their own.
- */
-
-// ─────────────────────────────────────────────
-//  CONSTANTS
-// ─────────────────────────────────────────────
-
-/** localStorage key for all participant records */
+/** script.js — Shared logic for the Scholarship Form Research Study. */
+/** localStorage key for all participant records. */
 const STORAGE_KEY = 'scholarshipStudyData';
 
-/** Session key for the current participant's in-progress record */
+/** Session key for the current participant's in-progress record. */
 const SESSION_KEY = 'scholarshipCurrentSession';
 
-/** Minimum CGPA required for eligibility */
+/** Minimum CGPA required for eligibility. */
 const ELIGIBILITY_CGPA = 3.0;
-
-
-// ─────────────────────────────────────────────
-//  STORAGE HELPERS
-// ─────────────────────────────────────────────
-
-/**
- * Load the full array of all past participant records from localStorage.
- * Returns an empty array if nothing has been saved yet.
- * @returns {Array} Array of participant record objects
- */
+/** Load the full array of all past participant records from localStorage. */
 function loadAllRecords() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -45,12 +18,7 @@ function loadAllRecords() {
   }
 }
 
-/**
- * Save (append or update) a single participant record to the records array.
- * If a record with the same sessionId already exists it is replaced;
- * otherwise the record is appended.
- * @param {Object} record - The participant session object to save
- */
+/** Save (append or update) a single participant record to the records array. */
 function saveRecord(record) {
   const all = loadAllRecords();
   const idx = all.findIndex(r => r.sessionId === record.sessionId);
@@ -62,20 +30,12 @@ function saveRecord(record) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
 }
 
-/**
- * Clear all participant records from localStorage.
- * Called from the results page.
- */
+/** Clear all participant records from localStorage. */
 function clearAllRecords() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
-/**
- * Start a new participant session and save it to localStorage.
- * Called from consent.html after the tester agrees and chooses a form.
- * @param {string} formType - 'progressive' or 'conventional'
- * @returns {Object} The newly created session object
- */
+/** Start a new participant session and save it to localStorage. */
 function createSession(formType) {
   const session = {
     sessionId:       generateId(),
@@ -97,11 +57,7 @@ function createSession(formType) {
   return session;
 }
 
-/**
- * Load the current in-progress session from localStorage.
- * Returns null if there is no active session.
- * @returns {Object|null}
- */
+/** Load the current in-progress session from localStorage. */
 function loadSession() {
   try {
     const raw = localStorage.getItem(SESSION_KEY);
@@ -112,19 +68,12 @@ function loadSession() {
   }
 }
 
-/**
- * Persist updates to the current in-progress session.
- * @param {Object} session - The updated session object
- */
+/** Persist updates to the current in-progress session. */
 function saveSession(session) {
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
-/**
- * Mark the current session as complete and move it to the records array.
- * Should be called when the participant submits the form.
- * @param {Object} extraData - Any final fields to merge in before saving
- */
+/** Mark the current session as complete and move it to the records array. */
 function finalizeSession(extraData = {}) {
   const session = loadSession();
   if (!session) return;
@@ -148,11 +97,7 @@ function finalizeSession(extraData = {}) {
   return session;
 }
 
-/**
- * Mark a session as ineligible, not abandoned.
- * This is used when the eligibility rules intentionally stop the application.
- * @param {number} lastStep - The last step the participant reached
- */
+/** Mark a session as ineligible, not abandoned. */
 function markIneligibleSession(lastStep) {
   const session = loadSession();
   if (!session) return;
@@ -169,26 +114,7 @@ function markIneligibleSession(lastStep) {
   submitToNetlify(session, 'ineligible');
   localStorage.removeItem(SESSION_KEY);
 }
-
-
-// ─────────────────────────────────────────────
-//  NETLIFY FORMS — ANONYMOUS RESULTS SUBMISSION
-// ─────────────────────────────────────────────
-
-/**
- * Submit anonymous lifecycle and research events to Netlify Forms.
- * Sends session metadata, completion metrics, and (when available) survey answers.
- * Nothing typed into the scholarship form fields is ever sent.
- *
- * This uses the Netlify Forms hidden-form technique: a real <form> element
- * with data-netlify="true" must exist in the HTML of the page for Netlify
- * to detect it at deploy time. The fetch() call then posts to that form.
- *
- * If the fetch fails (e.g. running locally), it fails silently — localStorage
- * data is always the primary record.
- *
- * @param {Object} record - The finalised participant session record
- */
+/** Submit anonymous lifecycle and research events to Netlify Forms. */
 function submitToNetlify(record, eventType = 'survey') {
   // Build a URL-encoded form body (required by Netlify Forms)
   const body = new URLSearchParams({
@@ -220,22 +146,7 @@ function submitToNetlify(record, eventType = 'survey') {
     console.warn('Netlify Forms submission failed (expected when running locally):', err.message);
   });
 }
-
-
-// ─────────────────────────────────────────────
-//  VALIDATION HELPERS
-// ─────────────────────────────────────────────
-
-/**
- * Validate a single form field.
- * Adds/removes CSS classes and shows/hides the paired .field-error element.
- *
- * @param {HTMLElement} field - The input/select/textarea to validate
- * @param {Function}    ruleFn - A function(value) => string|null.
- *                               Return an error message string on failure,
- *                               or null/undefined on success.
- * @returns {boolean} true if valid
- */
+/** Validate a single form field. */
 function validateField(field, ruleFn) {
   const value = field.value ? field.value.trim() : '';
   const errorEl = field.parentElement.querySelector('.field-error');
@@ -252,12 +163,7 @@ function validateField(field, ruleFn) {
   }
 }
 
-/**
- * Validate a group of radio buttons (no single input element).
- * @param {string}      name     - The radio input's name attribute
- * @param {HTMLElement} container - The parent element containing the radios and .field-error
- * @returns {boolean} true if at least one radio is checked
- */
+/** Validate a group of radio buttons (no single input element). */
 function validateRadioGroup(name, container) {
   const selected = container.querySelector(`input[name="${name}"]:checked`);
   const errorEl  = container.querySelector('.field-error');
@@ -269,11 +175,7 @@ function validateRadioGroup(name, container) {
   return true;
 }
 
-/**
- * Count words in a string.
- * @param {string} text
- * @returns {number}
- */
+/** Count words in a string. */
 function countWords(text) {
   return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
 }
@@ -298,18 +200,7 @@ const Rules = {
   refereeEmail: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Enter a valid referee email address.',
   bankAccount:  v => /^\d{10}$/.test(v) ? null : 'Enter a valid 10-digit bank account number.',
 };
-
-
-// ─────────────────────────────────────────────
-//  UI HELPERS
-// ─────────────────────────────────────────────
-
-/**
- * Update the word-count display element below a textarea.
- * @param {HTMLTextAreaElement} textarea
- * @param {HTMLElement}         counterEl
- * @param {number}              maxWords
- */
+/** Update the word-count display element below a textarea. */
 function updateWordCount(textarea, counterEl, maxWords) {
   const count = countWords(textarea.value);
   counterEl.textContent = `${count} / ${maxWords} words`;
@@ -320,11 +211,7 @@ function updateWordCount(textarea, counterEl, maxWords) {
   }
 }
 
-/**
- * Wire up radio option cards so clicking the label also updates the
- * .selected CSS class on the card for styling purposes.
- * @param {HTMLElement} container - The .radio-group element
- */
+/** Wire up radio option cards so clicking the label also updates the. */
 function wireRadioCards(container) {
   const options = container.querySelectorAll('.radio-option');
   options.forEach(opt => {
@@ -346,11 +233,7 @@ function wireRadioCards(container) {
   });
 }
 
-/**
- * Set the progress bar width and update step dot states.
- * @param {number} current - Current step (1-based)
- * @param {number} total   - Total number of steps
- */
+/** Set the progress bar width and update step dot states. */
 function setProgress(current, total) {
   const fill  = document.getElementById('progressFill');
   const label = document.getElementById('progressLabel');
@@ -367,33 +250,16 @@ function setProgress(current, total) {
   });
 }
 
-/**
- * Smoothly scroll to the top of the page (for multi-step navigation).
- */
+/** Smoothly scroll to the top of the page (for multi-step navigation). */
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-
-// ─────────────────────────────────────────────
-//  UTILITY
-// ─────────────────────────────────────────────
-
-/**
- * Generate a short unique ID for participant sessions.
- * Uses a timestamp + random suffix — not cryptographically secure,
- * but sufficient for a small research study.
- * @returns {string} e.g. "sess_1698322847_4f2a"
- */
+/** Generate a short unique ID for participant sessions. */
 function generateId() {
   return 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
 }
 
-/**
- * Format a number of seconds into a human-readable string.
- * @param {number} secs
- * @returns {string} e.g. "2m 34s"
- */
+/** Format a number of seconds into a human-readable string. */
 function formatDuration(secs) {
   if (secs == null || isNaN(secs)) return '—';
   const m = Math.floor(secs / 60);
@@ -401,24 +267,14 @@ function formatDuration(secs) {
   return m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
-/**
- * Safely compute the mean of an array of numbers.
- * Ignores null/undefined values.
- * @param {Array} arr
- * @returns {number|null} Mean value, or null if array is empty
- */
+/** Safely compute the mean of an array of numbers. */
 function mean(arr) {
   const valid = arr.filter(v => v != null && !isNaN(v));
   if (!valid.length) return null;
   return valid.reduce((a, b) => a + b, 0) / valid.length;
 }
 
-/**
- * Round a number to n decimal places.
- * @param {number} val
- * @param {number} dp
- * @returns {string}
- */
+/** Round a number to n decimal places. */
 function round(val, dp = 2) {
   if (val == null) return '—';
   return val.toFixed(dp);
